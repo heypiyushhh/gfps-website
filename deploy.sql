@@ -1,286 +1,310 @@
-﻿CREATE TABLE IF NOT EXISTS "__EFMigrationsHistory" (
-    "MigrationId" TEXT NOT NULL CONSTRAINT "PK___EFMigrationsHistory" PRIMARY KEY,
-    "ProductVersion" TEXT NOT NULL
-);
+﻿IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+GO
 
 BEGIN TRANSACTION;
-CREATE TABLE "AcademicPrograms" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK_AcademicPrograms" PRIMARY KEY AUTOINCREMENT,
-    "Title" TEXT NOT NULL,
-    "Department" TEXT NOT NULL,
-    "Description" TEXT NOT NULL,
-    "FullDescription" TEXT NOT NULL,
-    "ClassOrGrade" TEXT NOT NULL,
-    "Subject" TEXT NOT NULL,
-    "CurriculumJson" TEXT NOT NULL,
-    "Icon" TEXT NOT NULL,
-    "DisplayOrder" INTEGER NOT NULL,
-    "FeaturedImage" TEXT NOT NULL,
-    "IsActive" INTEGER NOT NULL,
-    "IsDeleted" INTEGER NOT NULL,
-    "CreatedDate" TEXT NOT NULL,
-    "UpdatedDate" TEXT NOT NULL
+CREATE TABLE [AcademicPrograms] (
+    [Id] int NOT NULL IDENTITY,
+    [Title] nvarchar(100) NOT NULL,
+    [Department] nvarchar(50) NOT NULL,
+    [Description] nvarchar(500) NOT NULL,
+    [FullDescription] nvarchar(max) NOT NULL,
+    [ClassOrGrade] nvarchar(50) NOT NULL,
+    [Subject] nvarchar(100) NOT NULL,
+    [CurriculumJson] nvarchar(max) NOT NULL,
+    [Icon] nvarchar(50) NOT NULL,
+    [DisplayOrder] int NOT NULL,
+    [FeaturedImage] nvarchar(255) NOT NULL,
+    [IsActive] bit NOT NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedDate] datetime2 NOT NULL,
+    [UpdatedDate] datetime2 NOT NULL,
+    CONSTRAINT [PK_AcademicPrograms] PRIMARY KEY ([Id])
 );
 
-CREATE TABLE "Achievements" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK_Achievements" PRIMARY KEY AUTOINCREMENT,
-    "Title" TEXT NOT NULL,
-    "RecipientName" TEXT NOT NULL,
-    "Year" TEXT NOT NULL,
-    "AchievementDate" TEXT NOT NULL,
-    "AchievementType" TEXT NOT NULL,
-    "Description" TEXT NOT NULL,
-    "Category" TEXT NOT NULL,
-    "Icon" TEXT NOT NULL,
-    "ImagePath" TEXT NOT NULL,
-    "CertificatePath" TEXT NOT NULL,
-    "IsActive" INTEGER NOT NULL,
-    "IsDeleted" INTEGER NOT NULL,
-    "CreatedDate" TEXT NOT NULL,
-    "UpdatedDate" TEXT NOT NULL
+CREATE TABLE [Achievements] (
+    [Id] int NOT NULL IDENTITY,
+    [Title] nvarchar(150) NOT NULL,
+    [RecipientName] nvarchar(150) NOT NULL,
+    [Year] nvarchar(10) NOT NULL,
+    [AchievementDate] datetime2 NOT NULL,
+    [AchievementType] nvarchar(50) NOT NULL,
+    [Description] nvarchar(1000) NOT NULL,
+    [Category] nvarchar(50) NOT NULL,
+    [Icon] nvarchar(50) NOT NULL,
+    [ImagePath] nvarchar(255) NOT NULL,
+    [CertificatePath] nvarchar(255) NOT NULL,
+    [IsActive] bit NOT NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedDate] datetime2 NOT NULL,
+    [UpdatedDate] datetime2 NOT NULL,
+    CONSTRAINT [PK_Achievements] PRIMARY KEY ([Id])
 );
 
-CREATE TABLE "AdmissionApplications" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK_AdmissionApplications" PRIMARY KEY AUTOINCREMENT,
-    "CandidateName" TEXT NOT NULL,
-    "DateOfBirth" TEXT NOT NULL,
-    "Gender" TEXT NOT NULL,
-    "GradeApplied" TEXT NOT NULL,
-    "ParentName" TEXT NOT NULL,
-    "ParentEmail" TEXT NOT NULL,
-    "ParentPhone" TEXT NOT NULL,
-    "Address" TEXT NOT NULL,
-    "Status" TEXT NOT NULL,
-    "SubmittedAt" TEXT NOT NULL
+CREATE TABLE [AdmissionApplications] (
+    [Id] int NOT NULL IDENTITY,
+    [CandidateName] nvarchar(100) NOT NULL,
+    [DateOfBirth] datetime2 NOT NULL,
+    [Gender] nvarchar(20) NOT NULL,
+    [GradeApplied] nvarchar(50) NOT NULL,
+    [ParentName] nvarchar(100) NOT NULL,
+    [ParentEmail] nvarchar(100) NOT NULL,
+    [ParentPhone] nvarchar(20) NOT NULL,
+    [Address] nvarchar(500) NOT NULL,
+    [Status] nvarchar(50) NOT NULL,
+    [SubmittedAt] datetime2 NOT NULL,
+    CONSTRAINT [PK_AdmissionApplications] PRIMARY KEY ([Id])
 );
 
-CREATE TABLE "AspNetRoles" (
-    "Id" TEXT NOT NULL CONSTRAINT "PK_AspNetRoles" PRIMARY KEY,
-    "Name" TEXT NULL,
-    "NormalizedName" TEXT NULL,
-    "ConcurrencyStamp" TEXT NULL
+CREATE TABLE [AspNetRoles] (
+    [Id] nvarchar(450) NOT NULL,
+    [Name] nvarchar(256) NULL,
+    [NormalizedName] nvarchar(256) NULL,
+    [ConcurrencyStamp] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetRoles] PRIMARY KEY ([Id])
 );
 
-CREATE TABLE "AspNetUsers" (
-    "Id" TEXT NOT NULL CONSTRAINT "PK_AspNetUsers" PRIMARY KEY,
-    "FullName" TEXT NOT NULL,
-    "ProfilePicturePath" TEXT NOT NULL,
-    "IsActive" INTEGER NOT NULL,
-    "LastLoginDate" TEXT NULL,
-    "UserName" TEXT NULL,
-    "NormalizedUserName" TEXT NULL,
-    "Email" TEXT NULL,
-    "NormalizedEmail" TEXT NULL,
-    "EmailConfirmed" INTEGER NOT NULL,
-    "PasswordHash" TEXT NULL,
-    "SecurityStamp" TEXT NULL,
-    "ConcurrencyStamp" TEXT NULL,
-    "PhoneNumber" TEXT NULL,
-    "PhoneNumberConfirmed" INTEGER NOT NULL,
-    "TwoFactorEnabled" INTEGER NOT NULL,
-    "LockoutEnd" TEXT NULL,
-    "LockoutEnabled" INTEGER NOT NULL,
-    "AccessFailedCount" INTEGER NOT NULL
+CREATE TABLE [AspNetUsers] (
+    [Id] nvarchar(450) NOT NULL,
+    [FullName] nvarchar(100) NOT NULL,
+    [ProfilePicturePath] nvarchar(255) NOT NULL,
+    [IsActive] bit NOT NULL,
+    [LastLoginDate] datetime2 NULL,
+    [UserName] nvarchar(256) NULL,
+    [NormalizedUserName] nvarchar(256) NULL,
+    [Email] nvarchar(256) NULL,
+    [NormalizedEmail] nvarchar(256) NULL,
+    [EmailConfirmed] bit NOT NULL,
+    [PasswordHash] nvarchar(max) NULL,
+    [SecurityStamp] nvarchar(max) NULL,
+    [ConcurrencyStamp] nvarchar(max) NULL,
+    [PhoneNumber] nvarchar(max) NULL,
+    [PhoneNumberConfirmed] bit NOT NULL,
+    [TwoFactorEnabled] bit NOT NULL,
+    [LockoutEnd] datetimeoffset NULL,
+    [LockoutEnabled] bit NOT NULL,
+    [AccessFailedCount] int NOT NULL,
+    CONSTRAINT [PK_AspNetUsers] PRIMARY KEY ([Id])
 );
 
-CREATE TABLE "AuditLogs" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK_AuditLogs" PRIMARY KEY AUTOINCREMENT,
-    "UserId" TEXT NOT NULL,
-    "UserEmail" TEXT NOT NULL,
-    "Action" TEXT NOT NULL,
-    "TableName" TEXT NOT NULL,
-    "RecordId" TEXT NOT NULL,
-    "OldValues" TEXT NOT NULL,
-    "NewValues" TEXT NOT NULL,
-    "Timestamp" TEXT NOT NULL
+CREATE TABLE [AuditLogs] (
+    [Id] int NOT NULL IDENTITY,
+    [UserId] nvarchar(100) NOT NULL,
+    [UserEmail] nvarchar(100) NOT NULL,
+    [Action] nvarchar(50) NOT NULL,
+    [TableName] nvarchar(100) NOT NULL,
+    [RecordId] nvarchar(100) NOT NULL,
+    [OldValues] nvarchar(max) NOT NULL,
+    [NewValues] nvarchar(max) NOT NULL,
+    [Timestamp] datetime2 NOT NULL,
+    CONSTRAINT [PK_AuditLogs] PRIMARY KEY ([Id])
 );
 
-CREATE TABLE "ContactInquiries" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK_ContactInquiries" PRIMARY KEY AUTOINCREMENT,
-    "Name" TEXT NOT NULL,
-    "Email" TEXT NOT NULL,
-    "Subject" TEXT NOT NULL,
-    "Message" TEXT NOT NULL,
-    "SubmittedAt" TEXT NOT NULL,
-    "IsRead" INTEGER NOT NULL,
-    "ReplyText" TEXT NOT NULL,
-    "RepliedAt" TEXT NULL
+CREATE TABLE [ContactInquiries] (
+    [Id] int NOT NULL IDENTITY,
+    [Name] nvarchar(100) NOT NULL,
+    [Email] nvarchar(100) NOT NULL,
+    [Subject] nvarchar(150) NOT NULL,
+    [Message] nvarchar(2000) NOT NULL,
+    [SubmittedAt] datetime2 NOT NULL,
+    [IsRead] bit NOT NULL,
+    [ReplyText] nvarchar(max) NOT NULL,
+    [RepliedAt] datetime2 NULL,
+    CONSTRAINT [PK_ContactInquiries] PRIMARY KEY ([Id])
 );
 
-CREATE TABLE "Events" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK_Events" PRIMARY KEY AUTOINCREMENT,
-    "Title" TEXT NOT NULL,
-    "EventDate" TEXT NOT NULL,
-    "EventTime" TEXT NOT NULL,
-    "Location" TEXT NOT NULL,
-    "ShortDescription" TEXT NOT NULL,
-    "FullDescription" TEXT NOT NULL,
-    "ImagePath" TEXT NOT NULL,
-    "GalleryImagesJson" TEXT NOT NULL,
-    "RegistrationLink" TEXT NOT NULL,
-    "IsPublished" INTEGER NOT NULL,
-    "IsActive" INTEGER NOT NULL,
-    "IsDeleted" INTEGER NOT NULL,
-    "CreatedDate" TEXT NOT NULL,
-    "UpdatedDate" TEXT NOT NULL
+CREATE TABLE [Events] (
+    [Id] int NOT NULL IDENTITY,
+    [Title] nvarchar(200) NOT NULL,
+    [EventDate] datetime2 NOT NULL,
+    [EventTime] nvarchar(50) NOT NULL,
+    [Location] nvarchar(200) NOT NULL,
+    [ShortDescription] nvarchar(500) NOT NULL,
+    [FullDescription] nvarchar(max) NOT NULL,
+    [ImagePath] nvarchar(255) NOT NULL,
+    [GalleryImagesJson] nvarchar(max) NOT NULL,
+    [RegistrationLink] nvarchar(255) NOT NULL,
+    [IsPublished] bit NOT NULL,
+    [IsActive] bit NOT NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedDate] datetime2 NOT NULL,
+    [UpdatedDate] datetime2 NOT NULL,
+    CONSTRAINT [PK_Events] PRIMARY KEY ([Id])
 );
 
-CREATE TABLE "Facilities" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK_Facilities" PRIMARY KEY AUTOINCREMENT,
-    "Name" TEXT NOT NULL,
-    "Description" TEXT NOT NULL,
-    "Details" TEXT NOT NULL,
-    "Icon" TEXT NOT NULL,
-    "ImagePath" TEXT NOT NULL,
-    "DisplayOrder" INTEGER NOT NULL,
-    "IsActive" INTEGER NOT NULL,
-    "IsDeleted" INTEGER NOT NULL,
-    "CreatedDate" TEXT NOT NULL,
-    "UpdatedDate" TEXT NOT NULL
+CREATE TABLE [Facilities] (
+    [Id] int NOT NULL IDENTITY,
+    [Name] nvarchar(100) NOT NULL,
+    [Description] nvarchar(500) NOT NULL,
+    [Details] nvarchar(1500) NOT NULL,
+    [Icon] nvarchar(50) NOT NULL,
+    [ImagePath] nvarchar(255) NOT NULL,
+    [DisplayOrder] int NOT NULL,
+    [IsActive] bit NOT NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedDate] datetime2 NOT NULL,
+    [UpdatedDate] datetime2 NOT NULL,
+    CONSTRAINT [PK_Facilities] PRIMARY KEY ([Id])
 );
 
-CREATE TABLE "FacultyMembers" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK_FacultyMembers" PRIMARY KEY AUTOINCREMENT,
-    "Name" TEXT NOT NULL,
-    "Designation" TEXT NOT NULL,
-    "Department" TEXT NOT NULL,
-    "Bio" TEXT NOT NULL,
-    "ImagePath" TEXT NOT NULL,
-    "DisplayOrder" INTEGER NOT NULL
+CREATE TABLE [FacultyMembers] (
+    [Id] int NOT NULL IDENTITY,
+    [Name] nvarchar(100) NOT NULL,
+    [Designation] nvarchar(100) NOT NULL,
+    [Department] nvarchar(50) NOT NULL,
+    [Bio] nvarchar(1000) NOT NULL,
+    [ImagePath] nvarchar(255) NOT NULL,
+    [DisplayOrder] int NOT NULL,
+    CONSTRAINT [PK_FacultyMembers] PRIMARY KEY ([Id])
 );
 
-CREATE TABLE "GalleryAlbums" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK_GalleryAlbums" PRIMARY KEY AUTOINCREMENT,
-    "Name" TEXT NOT NULL,
-    "Description" TEXT NOT NULL,
-    "CoverImageUrl" TEXT NOT NULL,
-    "EventTag" TEXT NOT NULL,
-    "IsActive" INTEGER NOT NULL,
-    "IsDeleted" INTEGER NOT NULL,
-    "CreatedDate" TEXT NOT NULL,
-    "UpdatedDate" TEXT NOT NULL
+CREATE TABLE [GalleryAlbums] (
+    [Id] int NOT NULL IDENTITY,
+    [Name] nvarchar(150) NOT NULL,
+    [Description] nvarchar(1000) NOT NULL,
+    [CoverImageUrl] nvarchar(255) NOT NULL,
+    [EventTag] nvarchar(100) NOT NULL,
+    [IsActive] bit NOT NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedDate] datetime2 NOT NULL,
+    [UpdatedDate] datetime2 NOT NULL,
+    CONSTRAINT [PK_GalleryAlbums] PRIMARY KEY ([Id])
 );
 
-CREATE TABLE "LoginHistories" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK_LoginHistories" PRIMARY KEY AUTOINCREMENT,
-    "UserId" TEXT NOT NULL,
-    "UserEmail" TEXT NOT NULL,
-    "LoginTime" TEXT NOT NULL,
-    "IpAddress" TEXT NOT NULL,
-    "BrowserAgent" TEXT NOT NULL,
-    "IsSuccessful" INTEGER NOT NULL
+CREATE TABLE [LoginHistories] (
+    [Id] int NOT NULL IDENTITY,
+    [UserId] nvarchar(100) NOT NULL,
+    [UserEmail] nvarchar(100) NOT NULL,
+    [LoginTime] datetime2 NOT NULL,
+    [IpAddress] nvarchar(50) NOT NULL,
+    [BrowserAgent] nvarchar(500) NOT NULL,
+    [IsSuccessful] bit NOT NULL,
+    CONSTRAINT [PK_LoginHistories] PRIMARY KEY ([Id])
 );
 
-CREATE TABLE "MediaFiles" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK_MediaFiles" PRIMARY KEY AUTOINCREMENT,
-    "FileName" TEXT NOT NULL,
-    "FilePath" TEXT NOT NULL,
-    "SizeBytes" INTEGER NOT NULL,
-    "ContentType" TEXT NOT NULL,
-    "UploadedAt" TEXT NOT NULL,
-    "UploadedBy" TEXT NOT NULL
+CREATE TABLE [MediaFiles] (
+    [Id] int NOT NULL IDENTITY,
+    [FileName] nvarchar(255) NOT NULL,
+    [FilePath] nvarchar(255) NOT NULL,
+    [SizeBytes] bigint NOT NULL,
+    [ContentType] nvarchar(100) NOT NULL,
+    [UploadedAt] datetime2 NOT NULL,
+    [UploadedBy] nvarchar(100) NOT NULL,
+    CONSTRAINT [PK_MediaFiles] PRIMARY KEY ([Id])
 );
 
-CREATE TABLE "News" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK_News" PRIMARY KEY AUTOINCREMENT,
-    "Title" TEXT NOT NULL,
-    "Slug" TEXT NOT NULL,
-    "PublishDate" TEXT NOT NULL,
-    "Summary" TEXT NOT NULL,
-    "Content" TEXT NOT NULL,
-    "ImagePath" TEXT NOT NULL,
-    "Author" TEXT NOT NULL,
-    "IsFeatured" INTEGER NOT NULL,
-    "IsPublished" INTEGER NOT NULL,
-    "IsActive" INTEGER NOT NULL,
-    "IsDeleted" INTEGER NOT NULL,
-    "CreatedDate" TEXT NOT NULL,
-    "UpdatedDate" TEXT NOT NULL
+CREATE TABLE [News] (
+    [Id] int NOT NULL IDENTITY,
+    [Title] nvarchar(200) NOT NULL,
+    [Slug] nvarchar(250) NOT NULL,
+    [PublishDate] datetime2 NOT NULL,
+    [Summary] nvarchar(1000) NOT NULL,
+    [Content] nvarchar(max) NOT NULL,
+    [ImagePath] nvarchar(255) NOT NULL,
+    [Author] nvarchar(100) NOT NULL,
+    [IsFeatured] bit NOT NULL,
+    [IsPublished] bit NOT NULL,
+    [IsActive] bit NOT NULL,
+    [IsDeleted] bit NOT NULL,
+    [CreatedDate] datetime2 NOT NULL,
+    [UpdatedDate] datetime2 NOT NULL,
+    CONSTRAINT [PK_News] PRIMARY KEY ([Id])
 );
 
-CREATE TABLE "SeoMetadata" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK_SeoMetadata" PRIMARY KEY AUTOINCREMENT,
-    "PageName" TEXT NOT NULL,
-    "Title" TEXT NOT NULL,
-    "MetaDescription" TEXT NOT NULL,
-    "OpenGraphTitle" TEXT NOT NULL,
-    "OpenGraphDescription" TEXT NOT NULL,
-    "OpenGraphImage" TEXT NOT NULL,
-    "CanonicalUrl" TEXT NOT NULL
+CREATE TABLE [SeoMetadata] (
+    [Id] int NOT NULL IDENTITY,
+    [PageName] nvarchar(100) NOT NULL,
+    [Title] nvarchar(150) NOT NULL,
+    [MetaDescription] nvarchar(255) NOT NULL,
+    [OpenGraphTitle] nvarchar(150) NOT NULL,
+    [OpenGraphDescription] nvarchar(255) NOT NULL,
+    [OpenGraphImage] nvarchar(255) NOT NULL,
+    [CanonicalUrl] nvarchar(255) NOT NULL,
+    CONSTRAINT [PK_SeoMetadata] PRIMARY KEY ([Id])
 );
 
-CREATE TABLE "AspNetRoleClaims" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK_AspNetRoleClaims" PRIMARY KEY AUTOINCREMENT,
-    "RoleId" TEXT NOT NULL,
-    "ClaimType" TEXT NULL,
-    "ClaimValue" TEXT NULL,
-    CONSTRAINT "FK_AspNetRoleClaims_AspNetRoles_RoleId" FOREIGN KEY ("RoleId") REFERENCES "AspNetRoles" ("Id") ON DELETE CASCADE
+CREATE TABLE [AspNetRoleClaims] (
+    [Id] int NOT NULL IDENTITY,
+    [RoleId] nvarchar(450) NOT NULL,
+    [ClaimType] nvarchar(max) NULL,
+    [ClaimValue] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetRoleClaims] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_AspNetRoleClaims_AspNetRoles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [AspNetRoles] ([Id]) ON DELETE CASCADE
 );
 
-CREATE TABLE "AspNetUserClaims" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK_AspNetUserClaims" PRIMARY KEY AUTOINCREMENT,
-    "UserId" TEXT NOT NULL,
-    "ClaimType" TEXT NULL,
-    "ClaimValue" TEXT NULL,
-    CONSTRAINT "FK_AspNetUserClaims_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES "AspNetUsers" ("Id") ON DELETE CASCADE
+CREATE TABLE [AspNetUserClaims] (
+    [Id] int NOT NULL IDENTITY,
+    [UserId] nvarchar(450) NOT NULL,
+    [ClaimType] nvarchar(max) NULL,
+    [ClaimValue] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetUserClaims] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_AspNetUserClaims_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
 );
 
-CREATE TABLE "AspNetUserLogins" (
-    "LoginProvider" TEXT NOT NULL,
-    "ProviderKey" TEXT NOT NULL,
-    "ProviderDisplayName" TEXT NULL,
-    "UserId" TEXT NOT NULL,
-    CONSTRAINT "PK_AspNetUserLogins" PRIMARY KEY ("LoginProvider", "ProviderKey"),
-    CONSTRAINT "FK_AspNetUserLogins_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES "AspNetUsers" ("Id") ON DELETE CASCADE
+CREATE TABLE [AspNetUserLogins] (
+    [LoginProvider] nvarchar(450) NOT NULL,
+    [ProviderKey] nvarchar(450) NOT NULL,
+    [ProviderDisplayName] nvarchar(max) NULL,
+    [UserId] nvarchar(450) NOT NULL,
+    CONSTRAINT [PK_AspNetUserLogins] PRIMARY KEY ([LoginProvider], [ProviderKey]),
+    CONSTRAINT [FK_AspNetUserLogins_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
 );
 
-CREATE TABLE "AspNetUserRoles" (
-    "UserId" TEXT NOT NULL,
-    "RoleId" TEXT NOT NULL,
-    CONSTRAINT "PK_AspNetUserRoles" PRIMARY KEY ("UserId", "RoleId"),
-    CONSTRAINT "FK_AspNetUserRoles_AspNetRoles_RoleId" FOREIGN KEY ("RoleId") REFERENCES "AspNetRoles" ("Id") ON DELETE CASCADE,
-    CONSTRAINT "FK_AspNetUserRoles_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES "AspNetUsers" ("Id") ON DELETE CASCADE
+CREATE TABLE [AspNetUserRoles] (
+    [UserId] nvarchar(450) NOT NULL,
+    [RoleId] nvarchar(450) NOT NULL,
+    CONSTRAINT [PK_AspNetUserRoles] PRIMARY KEY ([UserId], [RoleId]),
+    CONSTRAINT [FK_AspNetUserRoles_AspNetRoles_RoleId] FOREIGN KEY ([RoleId]) REFERENCES [AspNetRoles] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_AspNetUserRoles_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
 );
 
-CREATE TABLE "AspNetUserTokens" (
-    "UserId" TEXT NOT NULL,
-    "LoginProvider" TEXT NOT NULL,
-    "Name" TEXT NOT NULL,
-    "Value" TEXT NULL,
-    CONSTRAINT "PK_AspNetUserTokens" PRIMARY KEY ("UserId", "LoginProvider", "Name"),
-    CONSTRAINT "FK_AspNetUserTokens_AspNetUsers_UserId" FOREIGN KEY ("UserId") REFERENCES "AspNetUsers" ("Id") ON DELETE CASCADE
+CREATE TABLE [AspNetUserTokens] (
+    [UserId] nvarchar(450) NOT NULL,
+    [LoginProvider] nvarchar(450) NOT NULL,
+    [Name] nvarchar(450) NOT NULL,
+    [Value] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetUserTokens] PRIMARY KEY ([UserId], [LoginProvider], [Name]),
+    CONSTRAINT [FK_AspNetUserTokens_AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [AspNetUsers] ([Id]) ON DELETE CASCADE
 );
 
-CREATE TABLE "GalleryItems" (
-    "Id" INTEGER NOT NULL CONSTRAINT "PK_GalleryItems" PRIMARY KEY AUTOINCREMENT,
-    "Title" TEXT NOT NULL,
-    "Category" TEXT NOT NULL,
-    "FilePath" TEXT NOT NULL,
-    "IsVideo" INTEGER NOT NULL,
-    "VideoUrl" TEXT NOT NULL,
-    "GalleryAlbumId" INTEGER NULL,
-    "IsDeleted" INTEGER NOT NULL,
-    CONSTRAINT "FK_GalleryItems_GalleryAlbums_GalleryAlbumId" FOREIGN KEY ("GalleryAlbumId") REFERENCES "GalleryAlbums" ("Id")
+CREATE TABLE [GalleryItems] (
+    [Id] int NOT NULL IDENTITY,
+    [Title] nvarchar(150) NOT NULL,
+    [Category] nvarchar(50) NOT NULL,
+    [FilePath] nvarchar(255) NOT NULL,
+    [IsVideo] bit NOT NULL,
+    [VideoUrl] nvarchar(255) NOT NULL,
+    [GalleryAlbumId] int NULL,
+    [IsDeleted] bit NOT NULL,
+    CONSTRAINT [PK_GalleryItems] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_GalleryItems_GalleryAlbums_GalleryAlbumId] FOREIGN KEY ([GalleryAlbumId]) REFERENCES [GalleryAlbums] ([Id])
 );
 
-CREATE INDEX "IX_AspNetRoleClaims_RoleId" ON "AspNetRoleClaims" ("RoleId");
+CREATE INDEX [IX_AspNetRoleClaims_RoleId] ON [AspNetRoleClaims] ([RoleId]);
 
-CREATE UNIQUE INDEX "RoleNameIndex" ON "AspNetRoles" ("NormalizedName");
+CREATE UNIQUE INDEX [RoleNameIndex] ON [AspNetRoles] ([NormalizedName]) WHERE [NormalizedName] IS NOT NULL;
 
-CREATE INDEX "IX_AspNetUserClaims_UserId" ON "AspNetUserClaims" ("UserId");
+CREATE INDEX [IX_AspNetUserClaims_UserId] ON [AspNetUserClaims] ([UserId]);
 
-CREATE INDEX "IX_AspNetUserLogins_UserId" ON "AspNetUserLogins" ("UserId");
+CREATE INDEX [IX_AspNetUserLogins_UserId] ON [AspNetUserLogins] ([UserId]);
 
-CREATE INDEX "IX_AspNetUserRoles_RoleId" ON "AspNetUserRoles" ("RoleId");
+CREATE INDEX [IX_AspNetUserRoles_RoleId] ON [AspNetUserRoles] ([RoleId]);
 
-CREATE INDEX "EmailIndex" ON "AspNetUsers" ("NormalizedEmail");
+CREATE INDEX [EmailIndex] ON [AspNetUsers] ([NormalizedEmail]);
 
-CREATE UNIQUE INDEX "UserNameIndex" ON "AspNetUsers" ("NormalizedUserName");
+CREATE UNIQUE INDEX [UserNameIndex] ON [AspNetUsers] ([NormalizedUserName]) WHERE [NormalizedUserName] IS NOT NULL;
 
-CREATE INDEX "IX_GalleryItems_GalleryAlbumId" ON "GalleryItems" ("GalleryAlbumId");
+CREATE INDEX [IX_GalleryItems_GalleryAlbumId] ON [GalleryItems] ([GalleryAlbumId]);
 
-INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
-VALUES ('20260612052250_InitialCreate', '10.0.9');
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20260612063202_InitialSqlServerCreate', N'10.0.9');
 
 COMMIT;
+GO
 

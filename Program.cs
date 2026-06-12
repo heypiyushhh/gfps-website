@@ -13,20 +13,14 @@ builder.Logging.AddDebug();
 var logPath = System.IO.Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "App_Data", "logs", "error-log.txt");
 builder.Logging.AddFile(logPath);
 
-// 1. Add DB Context with SQL Server / SQLite Fallback
+// 1. Add DB Context with SQL Server exclusively
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
 if (string.IsNullOrEmpty(connectionString))
 {
-    // SQLite Fallback for instant local run
-    var dbPath = System.IO.Path.Combine(builder.Environment.ContentRootPath, "gfps.db");
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlite($"Data Source={dbPath}"));
+    throw new InvalidOperationException("Connection string 'DefaultConnection' was not found in configuration.");
 }
-else
-{
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(connectionString));
-}
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionString));
 
 // 2. Add ASP.NET Core Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -72,18 +66,27 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// 5. Database Initialization & Seeding
+// 5. Database Initialization, Connectivity Verification & Seeding
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    var context = services.GetRequiredService<ApplicationDbContext>();
+
+    logger.LogInformation("Verifying database connectivity to SQL Server...");
     try
     {
+        logger.LogInformation("Applying Entity Framework migrations to SQL Server...");
+        await context.Database.MigrateAsync();
+        logger.LogInformation("Database migration and schema checks succeeded.");
+
+        logger.LogInformation("Seeding database values...");
         await DbInitializer.InitializeAsync(services);
+        logger.LogInformation("Database seeding completed successfully.");
     }
     catch (Exception ex)
     {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while seeding the database.");
+        logger.LogCritical(ex, "CRITICAL: Database connection, migration, or seeding failed! Detailed diagnostics logged.");
     }
 }
 

@@ -503,6 +503,33 @@ namespace gfps.Data
                 context.Achievements.AddRange(achievements);
             }
 
+            // 11. Seed Contact Inquiries
+            if (!context.ContactInquiries.Any())
+            {
+                var inquiries = new List<ContactInquiry>
+                {
+                    new ContactInquiry
+                    {
+                        Name = "Rahul Sharma",
+                        Email = "rahul.sharma@example.com",
+                        Subject = "Admissions Inquiry for Grade XI",
+                        Message = "Could you please provide details about the fee structure and streams available for the upcoming academic year?",
+                        SubmittedAt = DateTime.Now.AddDays(-3),
+                        IsRead = false
+                    },
+                    new ContactInquiry
+                    {
+                        Name = "Priya Patel",
+                        Email = "priya.patel@example.com",
+                        Subject = "Campus Tour Booking",
+                        Message = "We would love to visit the campus and view the science labs. Do we need prior booking?",
+                        SubmittedAt = DateTime.Now.AddDays(-1),
+                        IsRead = true
+                    }
+                };
+                context.ContactInquiries.AddRange(inquiries);
+            }
+
             await context.SaveChangesAsync();
         }
 
