@@ -14,13 +14,17 @@ var logPath = System.IO.Path.Combine(builder.Environment.ContentRootPath, "wwwro
 builder.Logging.AddFile(logPath);
 
 // 1. Add DB Context with SQL Server exclusively
-string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
+string connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? "";
+
 if (string.IsNullOrEmpty(connectionString))
 {
-    throw new InvalidOperationException("Connection string 'DefaultConnection' was not found in configuration.");
+    throw new InvalidOperationException("Connection string 'DefaultConnection' or environment variable 'DB_CONNECTION_STRING' was not found.");
 }
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
+
 
 // 2. Add ASP.NET Core Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
