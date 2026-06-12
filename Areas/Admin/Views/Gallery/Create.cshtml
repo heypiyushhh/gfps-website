@@ -1,0 +1,46 @@
+@model gfps.Models.GalleryAlbum
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Create Gallery Album";
+}
+
+<div class="card-admin max-w-lg mx-auto">
+    <div class="mb-4">
+        <h5 class="mb-0 fw-bold">New Photo Album</h5>
+        <p class="text-muted text-sm">Create a new container album for grouping school photos.</p>
+    </div>
+
+    <form action="/Admin/Gallery/Create" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label for="Name" class="form-label">Album Name</label>
+            <input type="text" class="form-control" id="Name" name="Name" required placeholder="e.g. Science Exhibition 2026" />
+        </div>
+
+        <div class="mb-3">
+            <label for="EventTag" class="form-label">Category / Tag</label>
+            <select class="form-select" id="EventTag" name="EventTag" required>
+                <option value="Academics">Academics</option>
+                <option value="Sports">Sports</option>
+                <option value="Cultural">Cultural</option>
+                <option value="Campus">Campus</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="Description" class="form-label">Album Description</label>
+            <textarea class="form-control" id="Description" name="Description" rows="4" placeholder="Describe the event or activity featured in this album..."></textarea>
+        </div>
+
+        <div class="mb-4">
+            <label for="coverImageFile" class="form-label">Album Cover Image</label>
+            <input class="form-control" type="file" id="coverImageFile" name="coverImageFile" accept="image/*" />
+        </div>
+
+        <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-primary btn-primary-admin px-4">Create Album</button>
+            <a href="/Admin/Gallery" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,53 @@
+@model gfps.Models.Facility
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Add Campus Facility";
+}
+
+<div class="card-admin max-w-lg mx-auto">
+    <div class="mb-4">
+        <h5 class="mb-0 fw-bold">Add Campus Facility</h5>
+        <p class="text-muted text-sm">Add buildings, STEM hubs, sports complexes, or libraries with icons and full descriptions.</p>
+    </div>
+
+    <form action="/Admin/Facilities/Create" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label for="Name" class="form-label">Facility Name</label>
+            <input type="text" class="form-control" id="Name" name="Name" required placeholder="e.g. Modern Physics Laboratory" />
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="Icon" class="form-label">Material Icon Name</label>
+                <input type="text" class="form-control" id="Icon" name="Icon" value="domain" required placeholder="e.g. local_library, biotech, sports_soccer" />
+                <small class="text-muted">Google material icon identifier.</small>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="DisplayOrder" class="form-label">Display Order</label>
+                <input type="number" class="form-control" id="DisplayOrder" name="DisplayOrder" value="0" />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="Description" class="form-label">Short Description</label>
+            <textarea class="form-control" id="Description" name="Description" rows="3" required placeholder="Brief summary (displayed on list pages)..." maxlength="500"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="Details" class="form-label">Full Description / Details</label>
+            <textarea class="form-control" id="Details" name="Details" rows="6" required placeholder="Detailed specifications, safety metrics, capacity, and assets..." maxlength="1500"></textarea>
+        </div>
+
+        <div class="mb-4">
+            <label for="imageFile" class="form-label">Facility Image</label>
+            <input class="form-control" type="file" id="imageFile" name="imageFile" accept="image/*" />
+        </div>
+
+        <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-primary btn-primary-admin px-4">Add Facility</button>
+            <a href="/Admin/Facilities" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

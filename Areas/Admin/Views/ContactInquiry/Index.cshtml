@@ -1,0 +1,87 @@
+@model IEnumerable<gfps.Models.ContactInquiry>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Contact Support Inquiries";
+}
+
+<div class="card-admin">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="mb-0">Support Inbox</h5>
+        <a href="/Admin/ContactInquiry/ExportToExcel" class="btn btn-outline-dark d-flex align-items-center gap-1">
+            <span class="material-symbols-outlined">download</span>
+            Export Messages (CSV)
+        </a>
+    </div>
+
+    <!-- Filter Bar -->
+    <form method="get" action="/Admin/ContactInquiry" class="row g-3 mb-4 border-bottom pb-4">
+        <div class="col-md-5">
+            <label class="form-label text-sm text-muted">Search Messages</label>
+            <input type="text" class="form-control" name="searchString" value="@ViewBag.SearchString" placeholder="Name, subject, message content..." />
+        </div>
+        <div class="col-md-4">
+            <label class="form-label text-sm text-muted">Filter Status</label>
+            <select class="form-select" name="statusFilter">
+                <option value="">All Messages</option>
+                <option value="Unread" selected="@(ViewBag.StatusFilter == "Unread")">Unread Only</option>
+                <option value="Read" selected="@(ViewBag.StatusFilter == "Read")">Read Messages</option>
+            </select>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary-admin w-100 py-2">Apply Filters</button>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Sender</th>
+                    <th>Subject</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">No inquiries found.</td>
+                    </tr>
+                }
+                @foreach (var item in Model)
+                {
+                    <tr class="@(!item.IsRead ? "table-light font-weight-bold" : "")">
+                        <td>
+                            <strong>@item.Name</strong><br />
+                            <small class="text-muted">@item.Email</small>
+                        </td>
+                        <td>
+                            @item.Subject<br />
+                            <small class="text-muted text-truncate d-inline-block" style="max-width: 250px;">@item.Message</small>
+                        </td>
+                        <td>@item.SubmittedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>
+                            @if (!item.IsRead)
+                            {
+                                <span class="badge bg-primary">New</span>
+                            }
+                            else if (!string.IsNullOrEmpty(item.ReplyText))
+                            {
+                                <span class="badge bg-success">Replied</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Read</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="/Admin/ContactInquiry/Details/@item.Id" class="btn btn-sm btn-outline-dark">Open</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

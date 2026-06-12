@@ -1,0 +1,92 @@
+@model IEnumerable<gfps.Models.AdmissionApplication>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Admission Applications";
+}
+
+<div class="card-admin">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="mb-0">Applications Inbox</h5>
+        <a href="/Admin/Admissions/ExportToExcel" class="btn btn-outline-dark d-flex align-items-center gap-1">
+            <span class="material-symbols-outlined">download</span>
+            Export to Excel (CSV)
+        </a>
+    </div>
+
+    <!-- Filter Bar -->
+    <form method="get" action="/Admin/Admissions" class="row g-3 mb-4 border-bottom pb-4">
+        <div class="col-md-4">
+            <label class="form-label text-sm text-muted">Search Candidate / Parent</label>
+            <input type="text" class="form-control" name="searchString" value="@ViewBag.SearchString" placeholder="Name, email..." />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label text-sm text-muted">Filter Status</label>
+            <select class="form-select" name="statusFilter">
+                <option value="">All Statuses</option>
+                <option value="Submitted" selected="@(ViewBag.StatusFilter == "Submitted")">Submitted</option>
+                <option value="Reviewing" selected="@(ViewBag.StatusFilter == "Reviewing")">Reviewing</option>
+                <option value="Accepted" selected="@(ViewBag.StatusFilter == "Accepted")">Accepted</option>
+                <option value="Rejected" selected="@(ViewBag.StatusFilter == "Rejected")">Rejected</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label text-sm text-muted">Filter Grade</label>
+            <select class="form-select" name="gradeFilter">
+                <option value="">All Grades</option>
+                <option value="Kindergarten" selected="@(ViewBag.GradeFilter == "Kindergarten")">Kindergarten</option>
+                <option value="Primary School" selected="@(ViewBag.GradeFilter == "Primary School")">Primary School</option>
+                <option value="Middle School" selected="@(ViewBag.GradeFilter == "Middle School")">Middle School</option>
+                <option value="High School" selected="@(ViewBag.GradeFilter == "High School")">High School</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary-admin w-100 py-2">Apply Filters</button>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Candidate</th>
+                    <th>Parent Name</th>
+                    <th>Grade Applied</th>
+                    <th>Submission Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">No applications matching filters were found.</td>
+                    </tr>
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <strong>@item.CandidateName</strong><br />
+                            <small class="text-muted">DOB: @item.DateOfBirth.ToString("yyyy-MM-dd")</small>
+                        </td>
+                        <td>
+                            @item.ParentName<br />
+                            <small class="text-muted">@item.ParentEmail</small>
+                        </td>
+                        <td>@item.GradeApplied</td>
+                        <td>@item.SubmittedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>
+                            <span class="badge @(item.Status == "Accepted" ? "bg-success" : item.Status == "Rejected" ? "bg-danger" : "bg-warning")">
+                                @item.Status
+                            </span>
+                        </td>
+                        <td>
+                            <a href="/Admin/Admissions/Details/@item.Id" class="btn btn-sm btn-outline-dark">Review</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,194 @@
+@model gfps.Models.AdmissionApplication
+@{
+    ViewData["Title"] = "Apply For Admission";
+}
+
+<!-- Hero Section -->
+<section class="py-5 px-margin-mobile md:px-margin-desktop overflow-hidden bg-white border-bottom">
+    <div class="container-xxl py-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <span class="inline-block py-2 px-4 rounded-pill bg-secondary-subtle text-secondary font-label-md mb-4 uppercase tracking-wider">Join GFPS</span>
+                <h1 class="font-headline-xl text-primary mb-4">Join the Legacy of <span class="text-secondary">Excellence</span></h1>
+                <p class="font-body-lg text-secondary-emphasis">
+                    We welcome inquiries and applications for the upcoming academic session. Follow our simple, transparent admissions process to secure your child's seat.
+                </p>
+                <div class="d-flex gap-3 mt-4">
+                    <a href="#apply" class="btn btn-primary btn-primary-admin py-3 px-4 rounded">Apply Online Now</a>
+                    <a href="#fees" class="btn btn-outline-secondary py-3 px-4 rounded">Fee Structure</a>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <img src="/images/img_23.jpg" class="img-fluid rounded-4 shadow" alt="Admissions Hub" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Timeline -->
+<section class="py-5 bg-light border-bottom">
+    <div class="container-xxl py-5">
+        <div class="text-center mb-5">
+            <h2 class="font-headline-xl text-primary">Admissions Journey</h2>
+            <p class="font-body-md text-secondary-emphasis">A step-by-step roadmap to enrollment.</p>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-4 g-4 text-center">
+            <div class="col">
+                <div class="p-4 bg-white border rounded h-100">
+                    <h5 class="text-secondary">01. Inquiry &amp; Tour</h5>
+                    <p class="text-muted text-sm mb-0">Connect with admissions staff and take a campus walk-through.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="p-4 bg-white border rounded h-100">
+                    <h5 class="text-secondary">02. Submit Application</h5>
+                    <p class="text-muted text-sm mb-0">Complete the online form below with child and parent info.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="p-4 bg-white border rounded h-100">
+                    <h5 class="text-secondary">03. Assessment</h5>
+                    <p class="text-muted text-sm mb-0">Schedule the candidate interaction and parent meeting.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="p-4 bg-white border rounded h-100">
+                    <h5 class="text-secondary">04. Enrollment</h5>
+                    <p class="text-muted text-sm mb-0">Finalize documentation, pay fees, and receive onboarding.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Fees -->
+<section id="fees" class="py-5 bg-white border-bottom">
+    <div class="container-xxl py-5">
+        <div class="text-center mb-5">
+            <h2 class="font-headline-xl text-primary">Fee Structure (2024-25)</h2>
+            <p class="font-body-md text-secondary-emphasis">Investments in quality learning environments.</p>
+        </div>
+
+        <div class="table-responsive bg-light rounded border max-w-4xl mx-auto shadow-sm">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr class="table-dark">
+                        <th class="py-3 px-4">Grade Level</th>
+                        <th class="py-3 px-4">Annual Tuition</th>
+                        <th class="py-3 px-4">Development Fee</th>
+                        <th class="py-3 px-4">Total Investment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="py-3 px-4 fw-bold">Kindergarten (Pre-K to K2)</td>
+                        <td class="py-3 px-4">$12,500</td>
+                        <td class="py-3 px-4">$1,000</td>
+                        <td class="py-3 px-4 fw-bold text-secondary">$13,500</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 fw-bold">Primary School (Grades 1-5)</td>
+                        <td class="py-3 px-4">$14,200</td>
+                        <td class="py-3 px-4">$1,200</td>
+                        <td class="py-3 px-4 fw-bold text-secondary">$15,400</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 fw-bold">Middle School (Grades 6-8)</td>
+                        <td class="py-3 px-4">$16,800</td>
+                        <td class="py-3 px-4">$1,500</td>
+                        <td class="py-3 px-4 fw-bold text-secondary">$18,300</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-4 fw-bold">High School (Grades 9-12)</td>
+                        <td class="py-3 px-4">$19,500</td>
+                        <td class="py-3 px-4">$2,000</td>
+                        <td class="py-3 px-4 fw-bold text-secondary">$21,500</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- Application Form -->
+<section id="apply" class="py-5 bg-light">
+    <div class="container-xxl py-5 max-w-2xl mx-auto">
+        <div class="p-5 bg-white border rounded shadow-sm">
+            <h3 class="text-center mb-2 text-primary">Admission Application Form</h3>
+            <p class="text-center text-muted mb-4">Complete this secure form to register your application.</p>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["Success"]
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["Error"]
+                </div>
+            }
+
+            <form action="/Admissions/Apply" method="post">
+                @Html.AntiForgeryToken()
+
+                <h5 class="border-bottom pb-2 mb-3 text-secondary">Student Information</h5>
+                <div class="mb-3">
+                    <label for="CandidateName" class="form-label">Student Full Name</label>
+                    <input type="text" class="form-control" id="CandidateName" name="CandidateName" required placeholder="e.g. Alice Miller" />
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="DateOfBirth" class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="DateOfBirth" name="DateOfBirth" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Gender" class="form-label">Gender</label>
+                        <select class="form-select" id="Gender" name="Gender" required>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="GradeApplied" class="form-label">Grade Applied For</label>
+                    <select class="form-select" id="GradeApplied" name="GradeApplied" required>
+                        <option value="Kindergarten">Kindergarten</option>
+                        <option value="Primary School">Primary School (Grades 1-5)</option>
+                        <option value="Middle School">Middle School (Grades 6-8)</option>
+                        <option value="High School">High School (Grades 9-12)</option>
+                    </select>
+                </div>
+
+                <h5 class="border-bottom pb-2 mb-3 mt-4 text-secondary">Parent/Guardian Information</h5>
+                <div class="mb-3">
+                    <label for="ParentName" class="form-label">Parent/Guardian Name</label>
+                    <input type="text" class="form-control" id="ParentName" name="ParentName" required placeholder="e.g. Robert Miller" />
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="ParentEmail" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="ParentEmail" name="ParentEmail" required placeholder="robert@example.com" />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="ParentPhone" class="form-label">Phone Number</label>
+                        <input type="phone" class="form-control" id="ParentPhone" name="ParentPhone" required placeholder="+1 (555) 000-0000" />
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="Address" class="form-label">Residential Address</label>
+                    <textarea class="form-control" id="Address" name="Address" rows="3" required placeholder="Full street address, city, state, zip..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-primary-admin py-3 px-4 w-100">Submit Application</button>
+            </form>
+        </div>
+    </div>
+</section>

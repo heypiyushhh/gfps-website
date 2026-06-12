@@ -1,0 +1,24 @@
+# .NET Core compile outputs
+bin/
+obj/
+*.user
+*.userprefs
+*.suo
+.vs/
+
+# Databases
+*.db
+*.sqlite
+
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+.eslintcache
+
+# Local user configurations
+appsettings.Development.json
+
+# Local system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini

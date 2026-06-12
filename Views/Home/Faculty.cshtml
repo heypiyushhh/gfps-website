@@ -1,0 +1,116 @@
+@model IEnumerable<gfps.Models.FacultyMember>
+@{
+    ViewData["Title"] = "Our Expert Faculty";
+    string selectedDept = ViewBag.SelectedDepartment as string ?? "All";
+}
+
+<!-- Hero Section -->
+<section class="py-5 px-margin-mobile md:px-margin-desktop overflow-hidden bg-white border-bottom">
+    <div class="container-xxl py-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <span class="inline-block py-2 px-4 rounded-pill bg-secondary-subtle text-secondary font-label-md mb-4 uppercase tracking-wider">Academic Excellence</span>
+                <h1 class="font-headline-xl text-primary mb-4">Guided by the <span class="text-secondary">Best Minds</span></h1>
+                <p class="font-body-lg text-secondary-emphasis">
+                    Our educators are distinguished leaders in their fields, committed to nurturing critical thinking, creative logic, and intellectual curiosity.
+                </p>
+            </div>
+            <div class="col-lg-5">
+                <img src="/images/img_36.jpg" class="img-fluid rounded-4 shadow" alt="GFPS Educators" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filter & Faculty Grid -->
+<section class="py-5 bg-light">
+    <div class="container-xxl py-5">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-5 border-bottom pb-4 gap-4">
+            <div>
+                <h2 class="font-headline-lg text-primary mb-2">Our Faculty Directory</h2>
+                <p class="text-muted mb-0">Meet the academic department heads and lecturers.</p>
+            </div>
+            <!-- Department Filters -->
+            <div class="d-flex gap-2 overflow-x-auto pb-2">
+                <a href="/Home/Faculty?department=All" class="btn btn-sm rounded-pill px-4 py-2 @(selectedDept == "All" ? "btn-primary" : "btn-outline-secondary bg-white")">All Departments</a>
+                <a href="/Home/Faculty?department=Science" class="btn btn-sm rounded-pill px-4 py-2 @(selectedDept == "Science" ? "btn-primary" : "btn-outline-secondary bg-white")">Science</a>
+                <a href="/Home/Faculty?department=Mathematics" class="btn btn-sm rounded-pill px-4 py-2 @(selectedDept == "Mathematics" ? "btn-primary" : "btn-outline-secondary bg-white")">Mathematics</a>
+                <a href="/Home/Faculty?department=Humanities" class="btn btn-sm rounded-pill px-4 py-2 @(selectedDept == "Humanities" ? "btn-primary" : "btn-outline-secondary bg-white")">Humanities</a>
+                <a href="/Home/Faculty?department=Arts" class="btn btn-sm rounded-pill px-4 py-2 @(selectedDept == "Arts" ? "btn-primary" : "btn-outline-secondary bg-white")">Arts</a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            @if (!Model.Any())
+            {
+                <div class="col-12 text-center text-muted py-5">
+                    <span class="material-symbols-outlined fs-1 mb-2 text-secondary">search_off</span>
+                    <h5>No faculty members found in this department.</h5>
+                </div>
+            }
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-3">
+                    <div class="card-shadow-custom h-100 overflow-hidden bg-white border">
+                        <div class="position-relative" style="height: 240px; background-color: #f1f5f9;">
+                            @if (!string.IsNullOrEmpty(item.ImagePath))
+                            {
+                                <img src="@item.ImagePath" class="w-100 h-100 object-cover" alt="@item.Name" />
+                            }
+                            else
+                            {
+                                <div class="w-100 h-100 d-flex align-items-center justify-content-center text-secondary fs-1 bg-secondary-subtle">
+                                    person
+                                </div>
+                            }
+                        </div>
+                        <div class="p-4 relative">
+                            <div class="position-absolute top-0 end-0 translate-middle-y me-4" style="margin-top: -20px;">
+                                <div class="bg-white border rounded-circle p-1 shadow-sm">
+                                    <div class="bg-secondary-subtle text-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <span class="material-symbols-outlined fs-5">
+                                            @(item.Department == "Science" ? "biotech" : item.Department == "Mathematics" ? "calculate" : item.Department == "Humanities" ? "menu_book" : "palette")
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <h4 class="mb-1 text-primary">@item.Name</h4>
+                            <p class="text-secondary font-medium mb-3">@item.Designation</p>
+                            <p class="text-muted text-sm mb-0">@item.Bio</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Stats Grid -->
+<section class="py-5 bg-white border-top">
+    <div class="container-xxl py-5">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-5">
+                <h2 class="font-headline-xl text-primary mb-4">Commitment to Professional Excellence</h2>
+                <p class="font-body-md text-secondary-emphasis">Our faculty undergoes continuous development to integrate modern pedagogical methodologies and digital skills.</p>
+            </div>
+            <div class="col-lg-7">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="p-4 border rounded bg-light text-center">
+                            <span class="material-symbols-outlined text-secondary fs-1 mb-2">workspace_premium</span>
+                            <h2>100%</h2>
+                            <p class="text-muted mb-0 text-sm">Faculty holding advanced degrees.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-4 border rounded bg-light text-center">
+                            <span class="material-symbols-outlined text-secondary fs-1 mb-2">menu_book</span>
+                            <h2>50+ Hours</h2>
+                            <p class="text-muted mb-0 text-sm">Mandated professional training annually.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

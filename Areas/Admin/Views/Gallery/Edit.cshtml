@@ -1,0 +1,53 @@
+@model gfps.Models.GalleryAlbum
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Edit Gallery Album";
+}
+
+<div class="card-admin max-w-lg mx-auto">
+    <div class="mb-4">
+        <h5 class="mb-0 fw-bold">Edit Photo Album</h5>
+        <p class="text-muted text-sm">Update album title, tags, description, or swap cover image.</p>
+    </div>
+
+    <form action="/Admin/Gallery/Edit/@Model.Id" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <div class="mb-3">
+            <label for="Name" class="form-label">Album Name</label>
+            <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="EventTag" class="form-label">Category / Tag</label>
+            <select class="form-select" id="EventTag" name="EventTag" required>
+                <option value="Academics" selected="@(Model.EventTag == "Academics")">Academics</option>
+                <option value="Sports" selected="@(Model.EventTag == "Sports")">Sports</option>
+                <option value="Cultural" selected="@(Model.EventTag == "Cultural")">Cultural</option>
+                <option value="Campus" selected="@(Model.EventTag == "Campus")">Campus</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="Description" class="form-label">Album Description</label>
+            <textarea class="form-control" id="Description" name="Description" rows="4">@Model.Description</textarea>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label d-block fw-bold">Album Cover Image</label>
+            @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
+            {
+                <div class="mb-2">
+                    <img src="@Model.CoverImageUrl" class="img-thumbnail rounded" style="max-height: 120px;" alt="Cover Image" />
+                </div>
+            }
+            <input class="form-control" type="file" id="coverImageFile" name="coverImageFile" accept="image/*" />
+        </div>
+
+        <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-primary btn-primary-admin px-4">Save Changes</button>
+            <a href="/Admin/Gallery" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

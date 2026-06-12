@@ -1,0 +1,84 @@
+@model IEnumerable<gfps.Models.MediaFile>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Media Library";
+}
+
+<div class="row">
+    <!-- Upload Form Panel -->
+    <div class="col-md-4">
+        <div class="card-admin">
+            <h5 class="mb-3">Upload New File</h5>
+            <form action="/Admin/MediaLibrary/Upload" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div class="mb-3">
+                    <label for="file" class="form-label">Select File</label>
+                    <input class="form-control" type="file" id="file" name="file" required accept="image/*,application/pdf" />
+                    <small class="text-muted d-block mt-1">Accepted: Images (JPG, PNG, WebP) and PDF brochures.</small>
+                </div>
+                <button type="submit" class="btn btn-primary-admin w-100 py-2">Upload File</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Media Files List Panel -->
+    <div class="col-md-8">
+        <div class="card-admin">
+            <h5 class="mb-4">Stored Assets</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">Preview</th>
+                            <th>Name</th>
+                            <th>Relative Path</th>
+                            <th>Size</th>
+                            <th>Uploaded</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">No assets uploaded yet.</td>
+                            </tr>
+                        }
+                        @foreach (var file in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @if (file.ContentType.StartsWith("image/"))
+                                    {
+                                        <img src="@file.FilePath" class="rounded border" style="width: 48px; height: 48px; object-fit: cover;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-light rounded border d-flex align-items-center justify-content-center text-secondary" style="width: 48px; height: 48px;">
+                                            <span class="material-symbols-outlined">description</span>
+                                        </div>
+                                    }
+                                </td>
+                                <td>
+                                    <strong>@file.FileName</strong><br />
+                                    <small class="text-muted">@file.ContentType</small>
+                                </td>
+                                <td>
+                                    <code class="text-dark bg-light px-2 py-1 rounded" style="font-size: 0.85rem;">@file.FilePath</code>
+                                </td>
+                                <td>@((file.SizeBytes / 1024.0).ToString("F1")) KB</td>
+                                <td>@file.UploadedAt.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    <form action="/Admin/MediaLibrary/Delete/@file.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this file from the server?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

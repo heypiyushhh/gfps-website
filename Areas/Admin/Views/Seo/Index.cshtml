@@ -1,0 +1,50 @@
+@model IEnumerable<gfps.Models.SeoMetadata>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Search Engine Optimization (SEO) Settings";
+}
+
+<div class="card-admin">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="mb-0">Page Meta Settings</h5>
+        <form action="/Admin/Seo/RebuildSitemap" method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-primary btn-primary-admin d-flex align-items-center gap-1">
+                <span class="material-symbols-outlined">map</span>
+                Rebuild Sitemap.xml
+            </button>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Page Name</th>
+                    <th>Meta Title</th>
+                    <th>Meta Description</th>
+                    <th>OG Image Path</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><strong>@item.PageName</strong></td>
+                        <td>@item.Title</td>
+                        <td>
+                            <small class="text-muted text-truncate d-inline-block" style="max-width: 300px;">@item.MetaDescription</small>
+                        </td>
+                        <td>
+                            <code style="font-size: 0.85rem;">@item.OpenGraphImage</code>
+                        </td>
+                        <td>
+                            <a href="/Admin/Seo/Edit/@item.Id" class="btn btn-sm btn-outline-dark">Edit SEO</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

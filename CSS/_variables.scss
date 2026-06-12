@@ -1,0 +1,34 @@
+// Stitch Design System variables & Bootstrap 5 Overrides
+
+// Colors
+$primary: #0f172a;       // Slate-900 (anchor branding)
+$secondary: #0051d5;     // Stitch brand blue (interaction — exact token value)
+$warning: #f59e0b;       // Amber-500 (excellence marker)
+$body-bg: #f8fafc;       // Slate-50 (cool background)
+$body-color: #1b1b1d;    // Dark text
+$surface: #ffffff;
+
+// Typography
+$font-family-sans-serif: 'Inter', sans-serif;
+$headings-font-family: 'Poppins', sans-serif;
+
+// Border Radii
+$border-radius-sm: 0.25rem;
+$border-radius: 0.5rem;
+$border-radius-lg: 1rem;
+$border-radius-xl: 1.5rem;
+
+// Spacing scale (base 8px)
+$base-spacing: 8px;
+$section-gap: 120px;
+$container-max-width: 1280px;
+
+// Custom shadow (Level 1)
+$box-shadow-sm: 0px 4px 20px rgba(15, 23, 42, 0.03);
+$box-shadow: 0px 10px 30px rgba(15, 23, 42, 0.04);
+$box-shadow-lg: 0px 20px 40px rgba(15, 23, 42, 0.08);
+
+// Glassmorphism overlays
+$glass-bg: rgba(255, 255, 255, 0.7);
+$glass-blur: 12px;
+$glass-border: 1px solid rgba(255, 255, 255, 0.5);

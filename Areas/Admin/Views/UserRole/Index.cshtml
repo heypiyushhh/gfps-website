@@ -1,0 +1,182 @@
+@model IEnumerable<gfps.Models.ApplicationUser>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "User & Role Settings / Audit Trails";
+    var userRoles = ViewBag.UserRoles as Dictionary<string, string> ?? new Dictionary<string, string>();
+    var auditLogs = ViewBag.AuditLogs as List<gfps.Models.AuditLog> ?? new List<gfps.Models.AuditLog>();
+    var loginHistory = ViewBag.LoginHistory as List<gfps.Models.LoginHistory> ?? new List<gfps.Models.LoginHistory>();
+}
+
+<!-- Tabs Navigation -->
+<ul class="nav nav-tabs mb-4" id="userSettingsTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="true">System Users</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="audit-tab" data-bs-toggle="tab" data-bs-target="#audit" type="button" role="tab" aria-controls="audit" aria-selected="false">Audit Logs</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab" aria-controls="login" aria-selected="false">Login History</button>
+    </li>
+</ul>
+
+<!-- Tabs Content -->
+<div class="tab-content" id="userSettingsTabsContent">
+    <!-- System Users Tab -->
+    <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab">
+        <div class="card-admin">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="mb-0">Administrative Accounts</h5>
+                <a href="/Admin/UserRole/Create" class="btn btn-primary btn-primary-admin d-flex align-items-center gap-1">
+                    <span class="material-symbols-outlined">person_add</span>
+                    Create Admin User
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Last Active</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td><strong>@user.FullName</strong></td>
+                                <td>@user.Email</td>
+                                <td>
+                                    <span class="badge bg-secondary">@(userRoles.ContainsKey(user.Id) ? userRoles[user.Id] : "None")</span>
+                                </td>
+                                <td>
+                                    @if (user.IsActive)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Deactivated</span>
+                                    }
+                                </td>
+                                <td>@(user.LastLoginDate.HasValue ? user.LastLoginDate.Value.ToString("yyyy-MM-dd HH:mm") : "Never")</td>
+                                <td>
+                                    @if (user.UserName != User.Identity?.Name)
+                                    {
+                                        <form action="/Admin/UserRole/ToggleStatus/@user.Id" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm @(user.IsActive ? "btn-outline-danger" : "btn-outline-success")">
+                                                @(user.IsActive ? "Deactivate" : "Activate")
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <small class="text-muted">Logged In</small>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audit Logs Tab -->
+    <div class="tab-pane fade" id="audit" role="tabpanel" aria-labelledby="audit-tab">
+        <div class="card-admin">
+            <h5 class="mb-4">System Modification Audit Logs (Recent 20)</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" style="font-size: 0.9rem;">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>User</th>
+                            <th>Action</th>
+                            <th>Table</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (auditLogs.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">No modifications logged yet.</td>
+                            </tr>
+                        }
+                        @foreach (var log in auditLogs)
+                        {
+                            <tr>
+                                <td>@log.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                <td>
+                                    <strong>@log.UserEmail</strong>
+                                </td>
+                                <td>
+                                    <span class="badge @(log.Action == "Create" ? "bg-success" : log.Action == "Update" ? "bg-warning" : "bg-danger")">
+                                        @log.Action
+                                    </span>
+                                </td>
+                                <td>@log.TableName</td>
+                                <td>
+                                    <small class="text-truncate d-block" style="max-width: 400px;" title="@log.NewValues">
+                                        Record: @log.RecordId <br />
+                                        @if (!string.IsNullOrEmpty(log.NewValues)) { <span>New: @log.NewValues</span> }
+                                    </small>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login History Tab -->
+    <div class="tab-pane fade" id="login" role="tabpanel" aria-labelledby="login-tab">
+        <div class="card-admin">
+            <h5 class="mb-4">Login Access History (Recent 20)</h5>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>User Email</th>
+                            <th>IP Address</th>
+                            <th>Browser Agent</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (loginHistory.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">No logins logged yet.</td>
+                            </tr>
+                        }
+                        @foreach (var history in loginHistory)
+                        {
+                            <tr>
+                                <td>@history.LoginTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                <td><strong>@history.UserEmail</strong></td>
+                                <td>@history.IpAddress</td>
+                                <td>
+                                    <small class="text-truncate d-inline-block" style="max-width: 300px;" title="@history.BrowserAgent">@history.BrowserAgent</small>
+                                </td>
+                                <td>
+                                    <span class="badge @(history.IsSuccessful ? "bg-success" : "bg-danger")">
+                                        @(history.IsSuccessful ? "Success" : "Failed")
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

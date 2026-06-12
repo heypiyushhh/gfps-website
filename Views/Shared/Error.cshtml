@@ -1,0 +1,69 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = Model.Is404 ? "Page Not Found" : (Model.Is403 ? "Access Denied" : "Error Occurred");
+}
+
+<section class="py-5 px-margin-mobile md:px-margin-desktop bg-white border-bottom min-vh-75 d-flex align-items-center">
+    <div class="container-xxl py-5 text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                @if (Model.Is404)
+                {
+                    <div class="mb-4">
+                        <span class="material-symbols-outlined text-warning" style="font-size: 80px;">explore_off</span>
+                    </div>
+                    <h1 class="display-3 fw-bold text-primary mb-3">404</h1>
+                    <h2 class="h3 fw-semibold text-secondary-emphasis mb-4">Page Not Found</h2>
+                    <p class="font-body-md text-secondary-emphasis mb-5">
+                        The page you are looking for might have been removed, had its name changed, or is temporarily unavailable. Please check the URL or return to our homepage.
+                    </p>
+                }
+                else if (Model.Is403)
+                {
+                    <div class="mb-4">
+                        <span class="material-symbols-outlined text-danger" style="font-size: 80px;">gpp_bad</span>
+                    </div>
+                    <h1 class="display-3 fw-bold text-primary mb-3">403</h1>
+                    <h2 class="h3 fw-semibold text-secondary-emphasis mb-4">Access Denied</h2>
+                    <p class="font-body-md text-secondary-emphasis mb-5">
+                        You do not have permission to access this resource. If you believe this is an error, please contact the system administrator.
+                    </p>
+                }
+                else
+                {
+                    <div class="mb-4">
+                        <span class="material-symbols-outlined text-danger" style="font-size: 80px;">error</span>
+                    </div>
+                    <h1 class="display-3 fw-bold text-primary mb-3">500</h1>
+                    <h2 class="h3 fw-semibold text-secondary-emphasis mb-4">System Error</h2>
+                    <p class="font-body-md text-secondary-emphasis mb-5">
+                        An unexpected error occurred while processing your request. The issue has been automatically logged and our support team has been notified.
+                    </p>
+                }
+
+                @if (Model.ShowRequestId)
+                {
+                    <div class="p-3 bg-light border rounded mb-5 d-inline-block text-start">
+                        <span class="font-label-md text-secondary d-block mb-1">Support Diagnostics:</span>
+                        <code class="text-sm text-dark font-monospace">Request ID: @Model.RequestId</code>
+                        @if (Model.StatusCode.HasValue)
+                        {
+                            <br /><code class="text-sm text-dark font-monospace">HTTP Status: @Model.StatusCode</code>
+                        }
+                    </div>
+                }
+
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="/" class="btn btn-primary btn-primary-admin py-3 px-4 rounded d-flex align-items-center gap-2">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">home</span>
+                        Go to Homepage
+                    </a>
+                    <a href="/Home/Contact" class="btn btn-outline-secondary py-3 px-4 rounded d-flex align-items-center gap-2">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">mail</span>
+                        Contact Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

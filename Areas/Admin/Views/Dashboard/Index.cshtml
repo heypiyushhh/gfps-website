@@ -1,0 +1,188 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Dashboard Overview";
+    var recentInquiries = ViewBag.RecentInquiries as List<gfps.Models.ContactInquiry> ?? new List<gfps.Models.ContactInquiry>();
+    var recentApplications = ViewBag.RecentApplications as List<gfps.Models.AdmissionApplication> ?? new List<gfps.Models.AdmissionApplication>();
+}
+
+<div class="row g-3">
+    <!-- Stat 1 -->
+    <div class="col-md-3 col-sm-6">
+        <div class="card-admin text-center h-100 py-3 mb-0">
+            <span class="material-symbols-outlined text-primary fs-1 mb-2">groups</span>
+            <h2 class="mb-1 fw-bold text-dark">@ViewBag.TotalFaculty</h2>
+            <p class="text-muted mb-0 small">Total Faculty</p>
+        </div>
+    </div>
+    <!-- Stat 2 -->
+    <div class="col-md-3 col-sm-6">
+        <div class="card-admin text-center h-100 py-3 mb-0">
+            <span class="material-symbols-outlined text-success fs-1 mb-2">menu_book</span>
+            <h2 class="mb-1 fw-bold text-dark">@ViewBag.TotalPrograms</h2>
+            <p class="text-muted mb-0 small">Curriculum Streams</p>
+        </div>
+    </div>
+    <!-- Stat 3 -->
+    <div class="col-md-3 col-sm-6">
+        <div class="card-admin text-center h-100 py-3 mb-0">
+            <span class="material-symbols-outlined text-info fs-1 mb-2">event</span>
+            <h2 class="mb-1 fw-bold text-dark">@ViewBag.TotalEvents</h2>
+            <p class="text-muted mb-0 small">Total Events</p>
+        </div>
+    </div>
+    <!-- Stat 4 -->
+    <div class="col-md-3 col-sm-6">
+        <div class="card-admin text-center h-100 py-3 mb-0">
+            <span class="material-symbols-outlined text-warning fs-1 mb-2">newspaper</span>
+            <h2 class="mb-1 fw-bold text-dark">@ViewBag.TotalNews</h2>
+            <p class="text-muted mb-0 small">News Articles</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mt-1">
+    <!-- Stat 5 -->
+    <div class="col-md-3 col-sm-6">
+        <div class="card-admin text-center h-100 py-3 mb-0">
+            <span class="material-symbols-outlined text-danger fs-1 mb-2">photo_library</span>
+            <h2 class="mb-1 fw-bold text-dark">@ViewBag.TotalAlbums</h2>
+            <p class="text-muted mb-0 small">Gallery Albums</p>
+        </div>
+    </div>
+    <!-- Stat 6 -->
+    <div class="col-md-3 col-sm-6">
+        <div class="card-admin text-center h-100 py-3 mb-0">
+            <span class="material-symbols-outlined text-secondary fs-1 mb-2">image</span>
+            <h2 class="mb-1 fw-bold text-dark">@ViewBag.TotalGalleryImages</h2>
+            <p class="text-muted mb-0 small">Gallery Images</p>
+        </div>
+    </div>
+    <!-- Stat 7 -->
+    <div class="col-md-3 col-sm-6">
+        <div class="card-admin text-center h-100 py-3 mb-0">
+            <span class="material-symbols-outlined text-primary fs-1 mb-2">apartment</span>
+            <h2 class="mb-1 fw-bold text-dark">@ViewBag.TotalFacilities</h2>
+            <p class="text-muted mb-0 small">Campus Facilities</p>
+        </div>
+    </div>
+    <!-- Stat 8 -->
+    <div class="col-md-3 col-sm-6">
+        <div class="card-admin text-center h-100 py-3 mb-0">
+            <span class="material-symbols-outlined text-success fs-1 mb-2">emoji_events</span>
+            <h2 class="mb-1 fw-bold text-dark">@ViewBag.TotalAchievements</h2>
+            <p class="text-muted mb-0 small">Achievements</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mt-1">
+    <!-- Stat 9 -->
+    <div class="col-md-6">
+        <div class="card-admin text-center py-4 mb-0">
+            <span class="material-symbols-outlined text-info fs-1 mb-2">app_registration</span>
+            <h2 class="mb-1 fw-bold text-dark">@ViewBag.TotalApplications</h2>
+            <p class="text-muted mb-0">Admission Applications (All Time)</p>
+            <a href="/Admin/Admissions" class="btn btn-sm btn-outline-dark mt-2">Manage Admissions</a>
+        </div>
+    </div>
+    <!-- Stat 10 -->
+    <div class="col-md-6">
+        <div class="card-admin text-center py-4 mb-0">
+            <span class="material-symbols-outlined text-danger fs-1 mb-2">mail</span>
+            <h2 class="mb-1 fw-bold text-danger">@ViewBag.UnreadInquiries <span class="text-muted font-weight-normal fs-6">/ @ViewBag.TotalInquiries</span></h2>
+            <p class="text-muted mb-0">Unread Support Inquiries</p>
+            <a href="/Admin/ContactInquiry" class="btn btn-sm btn-outline-danger mt-2">Open Inbox</a>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Recent Applications -->
+    <div class="col-md-6">
+        <div class="card-admin">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0 fw-bold">Recent Admission Applications</h5>
+                <a href="/Admin/Admissions" class="btn btn-sm btn-link text-decoration-none">View All</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Candidate</th>
+                            <th>Grade</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (recentApplications.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">No applications received yet.</td>
+                            </tr>
+                        }
+                        @foreach (var app in recentApplications)
+                        {
+                            <tr>
+                                <td><strong>@app.CandidateName</strong></td>
+                                <td>@app.GradeApplied</td>
+                                <td>
+                                    <span class="badge @(app.Status == "Accepted" ? "bg-success" : app.Status == "Rejected" ? "bg-danger" : "bg-warning")">
+                                        @app.Status
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="/Admin/Admissions/Details/@app.Id" class="btn btn-sm btn-outline-dark">Details</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Inquiries -->
+    <div class="col-md-6">
+        <div class="card-admin">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0 fw-bold">Recent Support Inquiries</h5>
+                <a href="/Admin/ContactInquiry" class="btn btn-sm btn-link text-decoration-none">View All</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Sender</th>
+                            <th>Subject</th>
+                            <th>Submitted</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (recentInquiries.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">No inquiries received yet.</td>
+                            </tr>
+                        }
+                        @foreach (var inq in recentInquiries)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@inq.Name</strong><br />
+                                    <small class="text-muted">@inq.Email</small>
+                                </td>
+                                <td>@inq.Subject</td>
+                                <td>@inq.SubmittedAt.ToString("MM/dd HH:mm")</td>
+                                <td>
+                                    <a href="/Admin/ContactInquiry/Details/@inq.Id" class="btn btn-sm btn-outline-dark">View</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

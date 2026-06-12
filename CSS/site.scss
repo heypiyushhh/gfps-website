@@ -1,0 +1,465 @@
+@import "variables";
+
+// Import Bootstrap source SCSS
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+// =====================================================
+// BASE BODY
+// =====================================================
+body {
+    background-color: $body-bg;
+    color: $body-color;
+    overflow-x: hidden;
+    font-family: $font-family-sans-serif;
+}
+
+// =====================================================
+// STITCH TYPOGRAPHY SCALE
+// =====================================================
+.font-display-lg {
+    font-family: $headings-font-family;
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.font-display-lg-mobile {
+    font-family: $headings-font-family;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+.font-headline-xl {
+    font-family: $headings-font-family;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.font-headline-lg {
+    font-family: $headings-font-family;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.font-headline-md {
+    font-family: $headings-font-family;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.font-body-lg {
+    font-family: $font-family-sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.font-body-md {
+    font-family: $font-family-sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.font-label-md {
+    font-family: $font-family-sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.05em;
+}
+
+// =====================================================
+// STITCH COLOR TOKEN UTILITIES (Bootstrap-compatible)
+// =====================================================
+.text-secondary        { color: $secondary !important; }
+.text-on-surface       { color: #1b1b1d !important; }
+.text-on-surface-variant { color: #45464d !important; }
+.bg-secondary          { background-color: $secondary !important; }
+.border-secondary      { border-color: $secondary !important; }
+
+// =====================================================
+// GLASSMORPHISM PANELS
+// =====================================================
+.glass-panel {
+    background: $glass-bg;
+    backdrop-filter: blur($glass-blur);
+    -webkit-backdrop-filter: blur($glass-blur);
+    border: $glass-border;
+    box-shadow: $box-shadow;
+}
+
+// =====================================================
+// CARD / SHADOW COMPONENT
+// =====================================================
+.card-shadow-custom {
+    box-shadow: $box-shadow;
+    border: 1px solid #e2e8f0;
+    border-radius: $border-radius-lg;
+    background-color: $surface;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: $box-shadow-lg;
+    }
+}
+
+// =====================================================
+// SCROLL REVEAL ANIMATION
+// =====================================================
+.animate-fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+
+    &.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// =====================================================
+// NAVBAR — Source-faithful (Stitch)
+// Source: nav#navbar — fixed, bg-white/70, backdrop-blur-md, border-b border-white/20, shadow-sm
+// =====================================================
+#navbar {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+
+    // Applied by JS on scroll > 20px — matches source bg-white/90 + shadow-md
+    &.navbar-scrolled {
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+    }
+}
+
+// nav inner container: max-w-[1280px] h-[80px] px-margin-desktop
+.navbar-inner {
+    max-width: $container-max-width;
+    margin: 0 auto;
+    padding-left: 64px;
+    padding-right: 64px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    @include media-breakpoint-down(md) {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+// =====================================================
+// NAV LINKS — Source: font-label-md text-label-md
+// text-on-surface hover:text-secondary transition-colors duration-200
+// Active: text-secondary border-b-2 border-secondary pb-1
+// =====================================================
+.nav-link-custom {
+    font-family: $font-family-sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    color: #1b1b1d;                      // text-on-surface (#1b1b1d from Stitch config)
+    text-decoration: none;
+    padding-bottom: 4px;                 // pb-1
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
+    white-space: nowrap;
+
+    &:hover {
+        color: $secondary;               // hover:text-secondary
+        border-bottom-color: transparent;
+        text-decoration: none;
+    }
+
+    &.active {
+        color: $secondary;               // text-secondary (active)
+        border-bottom-color: $secondary; // border-b-2 border-secondary
+        text-decoration: none;
+    }
+}
+
+// Desktop nav items container: hidden md:flex items-center gap-8
+.desktop-nav-links {
+    display: none;
+    align-items: center;
+    gap: 32px;                           // gap-8 = 32px (source value)
+
+    @include media-breakpoint-up(md) {
+        display: flex;
+    }
+}
+
+// =====================================================
+// MEGA MENU (Academics dropdown)
+// =====================================================
+.mega-menu-dropdown {
+    position: static !important;
+}
+
+.mega-menu-content {
+    width: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid #e2e8f0;
+    border-radius: $border-radius-lg;
+    box-shadow: $box-shadow-lg;
+    background: #ffffff;
+    padding: 2rem;
+    margin-top: 4px;
+}
+
+.mega-menu-column-title {
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: $secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 0.5rem;
+}
+
+// =====================================================
+// APPLY NOW BUTTON — Source:
+// bg-secondary text-white px-6 py-2.5 rounded-lg
+// shadow hover:bg-on-secondary-fixed-variant hover:scale-[1.02] font-label-md
+// =====================================================
+.btn-apply-now {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: $secondary;       // bg-secondary (#0051d5)
+    color: #ffffff;
+    font-family: $font-family-sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 0.625rem 1.5rem;           // py-2.5 px-6
+    border-radius: 0.5rem;              // rounded-lg
+    border: none;
+    box-shadow: 0 4px 14px rgba(0, 81, 213, 0.18);
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #003ea8;      // on-secondary-fixed-variant (source hover)
+        color: #ffffff;
+        transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(0, 81, 213, 0.28);
+        text-decoration: none;
+    }
+
+    &:active {
+        transform: scale(0.97);
+    }
+
+    .material-symbols-outlined {
+        font-size: 18px;
+    }
+}
+
+// =====================================================
+// MOBILE NAVIGATION PANEL
+// =====================================================
+.mobile-nav-panel {
+    background: #ffffff;
+    border-top: 1px solid #f0edef;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+}
+
+.mobile-nav-link {
+    font-family: $font-family-sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #1b1b1d;
+    text-decoration: none;
+    padding: 0.5rem 0;
+    display: block;
+    border-bottom: 1px solid #f0edef;
+    transition: color 0.2s ease;
+
+    &:last-of-type {
+        border-bottom: none;
+    }
+
+    &:hover, &.active {
+        color: $secondary;
+        text-decoration: none;
+    }
+}
+
+// =====================================================
+// FOOTER — Source-faithful (Stitch)
+// Source: footer.bg-surface-container-lowest border-t border-surface-container mt-section-gap
+// bg-surface-container-lowest = #ffffff; border-surface-container = #f0edef
+// =====================================================
+.site-footer {
+    background-color: #ffffff;
+    border-top: 1px solid #f0edef;
+    margin-top: $section-gap;           // 120px — mt-section-gap
+}
+
+// Footer main grid: max-w-[1280px] px-margin-desktop py-section-gap grid grid-cols-4 gap-gutter
+.footer-main {
+    max-width: $container-max-width;
+    margin: 0 auto;
+    padding: $section-gap 64px;         // py-section-gap px-margin-desktop
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;                          // gap-gutter
+
+    @include media-breakpoint-down(md) {
+        grid-template-columns: 1fr;
+        padding: 60px 20px;
+        gap: 2rem;
+    }
+}
+
+// Brand column
+.footer-brand-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+// Brand logo link: font-headline-md text-headline-md font-bold flex items-center gap-2 mb-4
+.footer-brand-logo {
+    font-family: $headings-font-family;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #1b1b1d;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1rem;
+
+    .material-symbols-outlined {
+        color: $secondary;
+        font-variation-settings: 'FILL' 1;
+    }
+
+    &:hover {
+        color: #1b1b1d;
+        text-decoration: none;
+    }
+}
+
+// Tagline below logo: text-on-surface-variant font-body-md text-body-md mb-6
+.footer-tagline {
+    font-family: $font-family-sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #45464d;
+    margin-bottom: 1.5rem;
+}
+
+// Social media icons row: flex space-x-4 (source: public, mail icons)
+.footer-social-icons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0;
+
+    a {
+        color: #45464d;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s ease;
+
+        .material-symbols-outlined {
+            font-size: 22px;
+        }
+
+        &:hover {
+            color: $secondary;
+        }
+    }
+}
+
+// Footer column heading: font-label-md text-label-md text-on-surface mb-3 uppercase tracking-wider
+.footer-col-heading {
+    font-family: $font-family-sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #1b1b1d;
+    margin-bottom: 0.75rem;             // mb-3
+    display: block;
+}
+
+// Footer links list: list-unstyled space-y-3
+.footer-links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;                       // space-y-3
+
+    a {
+        font-family: $font-family-sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.6;
+        color: #45464d;
+        text-decoration: none;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: $secondary;
+            text-decoration: none;
+        }
+    }
+
+    li {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .material-symbols-outlined {
+        color: $secondary;
+        font-size: 18px;
+        margin-top: 3px;
+        flex-shrink: 0;
+    }
+}
+
+// Footer copyright bottom bar — SEPARATE from 4-column grid
+// Source (About): border-t border-surface-container py-6 text-center
+.footer-copyright-bar {
+    border-top: 1px solid #f0edef;
+    padding: 1.5rem 64px;
+    text-align: center;
+
+    p {
+        font-family: $font-family-sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        color: #45464d;
+        margin: 0;
+    }
+
+    @include media-breakpoint-down(md) {
+        padding: 1.5rem 20px;
+    }
+}

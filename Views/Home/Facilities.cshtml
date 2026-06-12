@@ -1,0 +1,59 @@
+@model IEnumerable<gfps.Models.Facility>
+@{
+    ViewData["Title"] = "Campus Infrastructure & Facilities";
+}
+
+<!-- Hero Section -->
+<section class="py-5 px-margin-mobile md:px-margin-desktop overflow-hidden bg-white border-bottom">
+    <div class="container-xxl py-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <span class="inline-block py-2 px-4 rounded-pill bg-secondary-subtle text-secondary font-label-md mb-4 uppercase tracking-wider">Our Campus Hub</span>
+                <h1 class="font-headline-xl text-primary mb-4">World-Class Infrastructure</h1>
+                <p class="font-body-lg text-secondary-emphasis">
+                    We provide a state-of-the-art physical ecosystem engineered to inspire academic inquiry, technological creation, and physical excellence.
+                </p>
+            </div>
+            <div class="col-lg-5">
+                <img src="/images/img_31.jpg" class="img-fluid rounded-4 shadow" alt="Facilities Showcase" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Facilities Showcase -->
+<section class="py-5 bg-light">
+    <div class="container-xxl py-5">
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6">
+                    <div class="card-shadow-custom bg-white border overflow-hidden h-100 d-flex flex-column">
+                        <div class="position-relative" style="height: 280px; background-color: #f1f5f9;">
+                            @if (!string.IsNullOrEmpty(item.ImagePath))
+                            {
+                                <img src="@item.ImagePath" class="w-100 h-100 object-cover" alt="@item.Name" />
+                            }
+                            else
+                            {
+                                <div class="w-100 h-100 d-flex align-items-center justify-content-center text-secondary fs-1 bg-secondary-subtle">
+                                    apartment
+                                </div>
+                            }
+                        </div>
+                        <div class="p-4 flex-grow-1 d-flex flex-column gap-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="material-symbols-outlined text-secondary fs-4">@item.Icon</span>
+                                <h3 class="font-headline-md text-primary mb-0">@item.Name</h3>
+                            </div>
+                            <p class="text-secondary-emphasis">@item.Description</p>
+                            <div class="mt-auto border-top pt-3 text-muted text-sm">
+                                @item.Details
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

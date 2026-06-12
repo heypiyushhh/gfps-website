@@ -1,0 +1,155 @@
+@model gfps.Models.GalleryAlbum
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Album Gallery";
+    var galleryItems = ViewBag.GalleryItems as List<gfps.Models.GalleryItem> ?? new List<gfps.Models.GalleryItem>();
+}
+
+<div class="card-admin mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-3">
+        <div>
+            <h5 class="mb-0 fw-bold">Album: @Model.Name</h5>
+            <p class="text-muted text-sm mb-0">Category: <span class="badge bg-secondary-subtle text-secondary">@Model.EventTag</span></p>
+        </div>
+        <div>
+            <a href="/Admin/Gallery/Edit/@Model.Id" class="btn btn-sm btn-outline-dark">Edit Album Info</a>
+            <a href="/Admin/Gallery" class="btn btn-sm btn-outline-secondary">Back to Albums</a>
+        </div>
+    </div>
+    <p class="text-secondary mb-0">@Model.Description</p>
+</div>
+
+<div class="row">
+    <!-- Image Upload Zone -->
+    <div class="col-lg-4 mb-4">
+        <div class="card-admin h-100">
+            <h5 class="mb-3 fw-bold">Upload Photos</h5>
+            
+            <div id="dropzone" class="border border-2 border-dashed rounded-3 p-4 text-center bg-light cursor-pointer mb-3" style="cursor: pointer; border-color: #cbd5e1 !important;">
+                <span class="material-symbols-outlined text-muted fs-1 mb-2">cloud_upload</span>
+                <h6 class="fw-bold text-dark mb-1">Drag & Drop images here</h6>
+                <p class="text-muted small mb-3">or click to browse local files</p>
+                <input type="file" id="fileInput" multiple accept="image/*" class="d-none" />
+            </div>
+            
+            <div id="uploadProgress" class="d-none">
+                <div class="progress mb-2" style="height: 6px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 100%"></div>
+                </div>
+                <p class="text-center text-muted small">Processing uploads, please wait...</p>
+            </div>
+            
+            <small class="text-muted d-block">Supported file types: JPG, PNG, WebP. Multiple files selection supported.</small>
+        </div>
+    </div>
+
+    <!-- Album Photos Grid -->
+    <div class="col-lg-8 mb-4">
+        <div class="card-admin h-100">
+            <h5 class="mb-3 fw-bold">Album Photos (@galleryItems.Count)</h5>
+            
+            @if (galleryItems.Count == 0)
+            {
+                <div class="text-center py-5 bg-light rounded-3 text-muted">
+                    <span class="material-symbols-outlined fs-1 mb-2">add_photo_alternate</span>
+                    <h6 class="fw-bold">No Photos in Album</h6>
+                    <p class="small mb-0">Drag and drop images on the left panel to populate this album.</p>
+                </div>
+            }
+            else
+            {
+                <div class="row g-3">
+                    @foreach (var item in galleryItems)
+                    {
+                        <div class="col-md-4 col-sm-6">
+                            <div class="card border rounded overflow-hidden h-100 shadow-sm position-relative group">
+                                <div style="height: 140px; background-color: #f1f5f9;">
+                                    <img src="@item.FilePath" class="w-100 h-100 object-cover" style="object-fit: cover;" alt="@item.Title" />
+                                </div>
+                                <div class="p-2 d-flex justify-content-between align-items-center bg-white border-top">
+                                    <span class="text-truncate text-sm text-dark font-weight-bold" style="max-width: 120px;" title="@item.Title">@item.Title</span>
+                                    <form action="/Admin/Gallery/DeleteImage/@item.Id" method="post" onsubmit="return confirm('Delete this image?');">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="albumId" value="@Model.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger p-1 d-flex align-items-center justify-content-center" style="width: 28px; height: 28px;" title="Delete Photo">
+                                            <span class="material-symbols-outlined fs-6" style="font-size: 16px;">delete</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropzone = document.getElementById('dropzone');
+            const fileInput = document.getElementById('fileInput');
+            const progress = document.getElementById('uploadProgress');
+
+            dropzone.addEventListener('click', () => fileInput.click());
+
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropzone.style.backgroundColor = '#f1f5f9';
+                dropzone.style.borderColor = '#3b82f6';
+            });
+
+            dropzone.addEventListener('dragleave', () => {
+                dropzone.style.backgroundColor = '#f8fafc';
+                dropzone.style.borderColor = '#cbd5e1';
+            });
+
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.style.backgroundColor = '#f8fafc';
+                dropzone.style.borderColor = '#cbd5e1';
+                
+                const files = e.dataTransfer.files;
+                uploadFiles(files);
+            });
+
+            fileInput.addEventListener('change', () => {
+                const files = fileInput.files;
+                uploadFiles(files);
+            });
+
+            function uploadFiles(files) {
+                if (files.length === 0) return;
+
+                const formData = new FormData();
+                formData.append('albumId', '@Model.Id');
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('files', files[i]);
+                }
+
+                dropzone.classList.add('d-none');
+                progress.classList.remove('d-none');
+
+                fetch('/Admin/Gallery/UploadImages', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.reload();
+                    } else {
+                        alert('Upload failed: ' + data.message);
+                        window.location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred during file upload.');
+                    window.location.reload();
+                });
+            }
+        });
+    </script>
+}

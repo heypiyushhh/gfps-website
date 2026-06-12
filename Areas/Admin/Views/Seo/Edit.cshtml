@@ -1,0 +1,56 @@
+@model gfps.Models.SeoMetadata
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = $"Edit SEO Metadata - {Model.PageName}";
+}
+
+<div class="card-admin max-w-lg mx-auto">
+    <div class="mb-4">
+        <h5 class="mb-0">Edit Page Meta Information</h5>
+        <p class="text-muted text-sm">Optimize how the "@Model.PageName" page appears on search engines and social shares.</p>
+    </div>
+
+    <form action="/Admin/Seo/Edit/@Model.Id" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <input type="hidden" name="PageName" value="@Model.PageName" />
+
+        <div class="mb-3">
+            <label for="Title" class="form-label">Meta Title Tag</label>
+            <input type="text" class="form-control" id="Title" name="Title" value="@Model.Title" required max="70" />
+            <small class="text-muted">Recommended: Under 60 characters.</small>
+        </div>
+
+        <div class="mb-3">
+            <label for="MetaDescription" class="form-label">Meta Description</label>
+            <textarea class="form-control" id="MetaDescription" name="MetaDescription" rows="3" required max="160">@Model.MetaDescription</textarea>
+            <small class="text-muted">Recommended: 120-150 characters.</small>
+        </div>
+
+        <div class="mb-3">
+            <label for="OpenGraphTitle" class="form-label">Open Graph (Facebook/LinkedIn) Title</label>
+            <input type="text" class="form-control" id="OpenGraphTitle" name="OpenGraphTitle" value="@Model.OpenGraphTitle" />
+        </div>
+
+        <div class="mb-3">
+            <label for="OpenGraphDescription" class="form-label">Open Graph Description</label>
+            <textarea class="form-control" id="OpenGraphDescription" name="OpenGraphDescription" rows="2">@Model.OpenGraphDescription</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="OpenGraphImage" class="form-label">Open Graph Share Image Path</label>
+            <input type="text" class="form-control" id="OpenGraphImage" name="OpenGraphImage" value="@Model.OpenGraphImage" />
+            <small class="text-muted">Provide a relative path (e.g. /images/img_31.jpg) for the image displayed on share cards.</small>
+        </div>
+
+        <div class="mb-4">
+            <label for="CanonicalUrl" class="form-label">Canonical URL</label>
+            <input type="text" class="form-control" id="CanonicalUrl" name="CanonicalUrl" value="@Model.CanonicalUrl" />
+        </div>
+
+        <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-primary btn-primary-admin">Save SEO Settings</button>
+            <a href="/Admin/Seo" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

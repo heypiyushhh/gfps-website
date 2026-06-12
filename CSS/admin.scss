@@ -1,0 +1,43 @@
+@import "variables";
+
+// Import Bootstrap source SCSS
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+// Admin dashboard overrides
+body.admin-body {
+    background-color: #f8fafc;
+    color: #1e293b;
+    font-family: 'Inter', sans-serif;
+}
+
+// Sidebar styling
+.admin-sidebar {
+    background-color: #0f172a;
+    border-right: 1px solid #1e293b;
+}
+
+// Dashboard statistics widgets
+.stat-card {
+    border: 1px solid #e2e8f0;
+    border-radius: $border-radius-lg;
+    background: #ffffff;
+    box-shadow: $box-shadow-sm;
+    transition: box-shadow 0.2s ease;
+    
+    &:hover {
+        box-shadow: $box-shadow;
+    }
+}
+
+// Admin-specific compact tables
+.admin-table {
+    thead th {
+        background-color: #f1f5f9;
+        font-weight: 600;
+        color: #475569;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        border-bottom: 1px solid #e2e8f0;
+    }
+}

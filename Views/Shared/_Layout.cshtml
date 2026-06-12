@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@(ViewBag.MetaTitle ?? ViewData["Title"] ?? "Green Field Public School")</title>
+    <meta name="description" content="@(ViewBag.MetaDescription ?? "Empowering Future Leaders Through Excellence in Education.")" />
+
+    <!-- Open Graph / Social Cards -->
+    <meta property="og:title" content="@(ViewBag.OgTitle ?? ViewBag.MetaTitle ?? ViewData["Title"] ?? "Green Field Public School")" />
+    <meta property="og:description" content="@(ViewBag.OgDescription ?? ViewBag.MetaDescription ?? "Empowering Future Leaders Through Excellence in Education.")" />
+    <meta property="og:image" content="@(ViewBag.OgImage ?? "/images/img_31.jpg")" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Canonical URL -->
+    @if (ViewBag.CanonicalUrl != null)
+    {
+        <link rel="canonical" href="@ViewBag.CanonicalUrl" />
+    }
+
+    <!-- Google Fonts: Inter + Poppins (source fonts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+
+    <!-- Material Symbols (source uses wght,FILL variable font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+    <!-- Compiled Design CSS -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    @RenderSection("Styles", required: false)
+</head>
+<body class="antialiased overflow-x-hidden" style="background-color: #f8fafc; color: #1b1b1d; padding-top: 80px;">
+
+    <!-- =====================================================
+         HEADER / NAVBAR
+         Source: nav#navbar — fixed, bg-white/70, backdrop-blur-md,
+         border-b border-white/20, shadow-sm, transition-all duration-300
+         Container: max-w-[1280px] h-[80px] px-margin-desktop flex items-center justify-between
+         ===================================================== -->
+    <header id="navbar" class="fixed top-0 w-100 z-50" style="z-index: 1030; width: 100%; position: fixed; top: 0; left: 0; right: 0;">
+        <nav class="navbar-inner" aria-label="Main navigation">
+
+            <!-- Brand Logo
+                 Source: div.font-headline-md.font-bold flex items-center gap-2
+                 Wrapped in <a> for UX (better than source's non-linked div) -->
+            <a class="footer-brand-logo" href="/" style="font-size: 20px; margin-bottom: 0;" aria-label="Green Field Public School - Home">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; color: #0051d5; font-size: 28px;">school</span>
+                Green Field Public School
+            </a>
+
+            <!-- Desktop Navigation Links
+                 Source: hidden md:flex items-center gap-8 font-label-md text-label-md
+                 gap-8 = 32px between items (source value — NOT gap-6) -->
+            <div class="desktop-nav-links" role="list">
+                <!-- Home -->
+                <a class="nav-link-custom @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" && ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")"
+                   href="/" role="listitem">Home</a>
+
+                <!-- About Us -->
+                <a class="nav-link-custom @(ViewContext.RouteData.Values["Action"]?.ToString() == "About" ? "active" : "")"
+                   href="/Home/About" role="listitem">About</a>
+
+                <!-- Academics (mega-menu dropdown) -->
+                <div class="dropdown mega-menu-dropdown d-inline-block" role="listitem">
+                    <a class="nav-link-custom dropdown-toggle @(ViewContext.RouteData.Values["Action"]?.ToString() is "Academics" or "Faculty" or "Facilities" or "Achievements" ? "active" : "")"
+                       href="#" id="academicsDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false"
+                       aria-haspopup="true">
+                        Academics
+                    </a>
+                    <div class="dropdown-menu mega-menu-content" aria-labelledby="academicsDropdown">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mega-menu-column-title">Programs</div>
+                                <a class="dropdown-item py-2 font-body-md" href="/Home/Academics">CBSE Curriculum</a>
+                                <a class="dropdown-item py-2 font-body-md" href="/Home/Academics#departments">Departments</a>
+                                <a class="dropdown-item py-2 font-body-md" href="/Home/Academics#calendar">Academic Calendar</a>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mega-menu-column-title">Faculty &amp; Staff</div>
+                                <a class="dropdown-item py-2 font-body-md" href="/Home/Faculty">Educators Directory</a>
+                                <a class="dropdown-item py-2 font-body-md" href="/Home/Faculty#growth">Professional Growth</a>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mega-menu-column-title">Infrastructure</div>
+                                <a class="dropdown-item py-2 font-body-md" href="/Home/Facilities">Campus Facilities</a>
+                                <a class="dropdown-item py-2 font-body-md" href="/Home/Facilities#labs">Innovation Labs</a>
+                                <a class="dropdown-item py-2 font-body-md" href="/Home/Achievements">Timeline &amp; Accolades</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admissions -->
+                <a class="nav-link-custom @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admissions" ? "active" : "")"
+                   href="/Admissions" role="listitem">Admissions</a>
+
+                <!-- Gallery -->
+                <a class="nav-link-custom @(ViewContext.RouteData.Values["Action"]?.ToString() == "Gallery" ? "active" : "")"
+                   href="/Home/Gallery" role="listitem">Gallery</a>
+
+                <!-- Events & News -->
+                <a class="nav-link-custom @(ViewContext.RouteData.Values["Action"]?.ToString() == "EventsNews" ? "active" : "")"
+                   href="/Home/EventsNews" role="listitem">Events &amp; News</a>
+
+                <!-- Contact -->
+                <a class="nav-link-custom @(ViewContext.RouteData.Values["Action"]?.ToString() == "Contact" ? "active" : "")"
+                   href="/Home/Contact" role="listitem">Contact</a>
+            </div>
+
+            <!-- Apply Now CTA — Source: single button, bg-secondary, rounded-lg, shadow, hover scale
+                 Source (About/Home): bg-secondary text-white px-6 py-3 rounded-lg hover:scale-[1.02] shadow-lg
+                 Source (Faculty): bg-primary-container text-on-primary rounded-full px-6 py-2.5 + arrow icon
+                 We use the Home/About version as primary canonical reference -->
+            <div class="d-none d-md-flex align-items-center">
+                <a href="/Admissions" class="btn-apply-now">
+                    Apply Now
+                    <span class="material-symbols-outlined" style="font-size: 18px; line-height: 1;">arrow_forward</span>
+                </a>
+            </div>
+
+            <!-- Mobile Hamburger Button
+                 Source: button.md:hidden text-on-surface
+                 span.material-symbols-outlined menu icon -->
+            <button class="d-md-none btn border-0 p-2"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mobileMenu"
+                    aria-controls="mobileMenu"
+                    aria-expanded="false"
+                    aria-label="Open navigation menu"
+                    style="color: #1b1b1d;">
+                <span class="material-symbols-outlined" style="font-size: 30px;">menu</span>
+            </button>
+        </nav>
+
+        <!-- Mobile Navigation Panel
+             Source: (panel not shown in Stitch, added for functionality)
+             Opens below the fixed header -->
+        <div class="collapse mobile-nav-panel" id="mobileMenu">
+            <div style="padding: 1rem 20px 1.5rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                <a class="mobile-nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" && ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")"
+                   href="/">Home</a>
+                <a class="mobile-nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "About" ? "active" : "")"
+                   href="/Home/About">About Us</a>
+                <a class="mobile-nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Academics" ? "active" : "")"
+                   href="/Home/Academics">Academics &amp; Curriculum</a>
+                <a class="mobile-nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Faculty" ? "active" : "")"
+                   href="/Home/Faculty">Educators Directory</a>
+                <a class="mobile-nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admissions" ? "active" : "")"
+                   href="/Admissions">Admissions</a>
+                <a class="mobile-nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Gallery" ? "active" : "")"
+                   href="/Home/Gallery">Gallery</a>
+                <a class="mobile-nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "EventsNews" ? "active" : "")"
+                   href="/Home/EventsNews">Events &amp; News</a>
+                <a class="mobile-nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Contact" ? "active" : "")"
+                   href="/Home/Contact">Contact</a>
+
+                <!-- Mobile CTAs -->
+                <div style="border-top: 1px solid #f0edef; padding-top: 1rem; margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                    <a href="/Admissions" class="btn-apply-now" style="justify-content: center; width: 100%;">
+                        Apply For Admissions
+                    </a>
+                    <a href="/Account/Login" style="display: block; text-align: center; padding: 0.625rem; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; color: #0051d5; text-decoration: none; border: 2px solid #0051d5; border-radius: 0.5rem; transition: all 0.2s;">
+                        Portal Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content Area -->
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <!-- =====================================================
+         FOOTER
+         Source (cross-screen synthesis):
+         - bg-surface-container-lowest (#ffffff) border-t border-surface-container (#f0edef)
+         - mt-section-gap (120px — via .site-footer margin-top in SCSS)
+         - Grid: max-w-[1280px] px-margin-desktop py-section-gap grid-cols-4 gap-gutter
+         - Col 1: Brand logo + tagline + social icons (public, mail)
+         - Col 2: Campus links (Facilities, Events, Faculty)
+         - Col 3: Legal links (Privacy Policy, Terms of Service)
+         - Col 4: Contact info (location, phone, email)
+         - Below grid: full-width border-t copyright bar
+         ===================================================== -->
+    <footer class="site-footer" role="contentinfo">
+        <!-- 4-column grid -->
+        <div class="footer-main">
+
+            <!-- Column 1: Brand -->
+            <div class="footer-brand-col">
+                <!-- Logo -->
+                <a class="footer-brand-logo" href="/" aria-label="Green Field Public School">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; font-size: 28px;">school</span>
+                    Green Field Public School
+                </a>
+
+                <!-- Tagline: Source (Home) "Empowering Future Leaders Through Excellence in Education since 2005." -->
+                <p class="footer-tagline">
+                    Empowering minds, building character, and shaping the leaders of tomorrow since 1995.
+                </p>
+
+                <!-- Social Icons — Source (Home): public + mail; Source (About): public + share -->
+                <div class="footer-social-icons" aria-label="Social links">
+                    <a href="#" aria-label="Website / Social Media">
+                        <span class="material-symbols-outlined">public</span>
+                    </a>
+                    <a href="mailto:admissions@greenfield.edu" aria-label="Email us">
+                        <span class="material-symbols-outlined">mail</span>
+                    </a>
+                    <a href="#" aria-label="Share">
+                        <span class="material-symbols-outlined">share</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Column 2: Campus Links
+                 Source heading: font-label-md text-label-md (uppercase, small)
+                 Source uses "Quick Links" or "Campus" — we use "Campus" from Home screen -->
+            <div>
+                <span class="footer-col-heading">Campus</span>
+                <ul class="footer-links-list">
+                    <li><a href="/Home/Facilities">Facilities</a></li>
+                    <li><a href="/Home/EventsNews">News &amp; Events</a></li>
+                    <li><a href="/Home/Faculty">Faculty Directory</a></li>
+                    <li><a href="/Home/Achievements">Achievements</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Legal Links -->
+            <div>
+                <span class="footer-col-heading">Legal</span>
+                <ul class="footer-links-list">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="/Home/Contact">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 4: Contact Information
+                 Source (About): ul.space-y-3 with location_on, phone, mail icons + text -->
+            <div>
+                <span class="footer-col-heading">Contact</span>
+                <ul class="footer-links-list">
+                    <li>
+                        <span class="material-symbols-outlined">location_on</span>
+                        <span style="font-size: 16px; color: #45464d; line-height: 1.6;">123 Education Lane,<br />Innovation District, CA 90210</span>
+                    </li>
+                    <li>
+                        <span class="material-symbols-outlined">phone</span>
+                        <span style="font-size: 16px; color: #45464d;">+1 (555) 123-4567</span>
+                    </li>
+                    <li>
+                        <span class="material-symbols-outlined">mail</span>
+                        <a href="mailto:admissions@greenfield.edu">admissions@greenfield.edu</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Copyright bottom bar — full width, separate from grid
+             Source (About): border-t border-surface-container py-6 text-center
+             Source (Home): inside col-span-4 inside grid (functionally same) -->
+        <div class="footer-copyright-bar">
+            <p>© 2024 Green Field Public School. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS (includes Popper for dropdowns) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,162 @@
+@model IEnumerable<gfps.Models.AcademicProgram>
+@using System.Text.Json;
+@{
+    ViewData["Title"] = "Academic Excellence";
+}
+
+<!-- Hero Section -->
+<section class="py-5 px-margin-mobile md:px-margin-desktop overflow-hidden bg-white border-bottom">
+    <div class="container-xxl py-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <span class="inline-block py-2 px-4 rounded-pill bg-secondary-subtle text-secondary font-label-md mb-4 uppercase tracking-wider">Pursue Greatness</span>
+                <h1 class="font-headline-xl text-primary mb-4">Academic Excellence at <span class="text-secondary">Green Field</span></h1>
+                <p class="font-body-lg text-secondary-emphasis">
+                    Our CBSE curriculum combined with global pedagogical standards is designed to challenge minds, build character, and prepare students to lead in a rapidly changing world.
+                </p>
+                <div class="d-flex gap-3 mt-4">
+                    <a href="#streams" class="btn btn-primary btn-primary-admin py-3 px-4 rounded">Explore Streams</a>
+                    <a href="#calendar" class="btn btn-outline-secondary py-3 px-4 rounded">Academic Calendar</a>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <img src="/images/img_31.jpg" class="img-fluid rounded-4 shadow" alt="Academics Hero" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Grid -->
+<section class="py-5 bg-light border-bottom">
+    <div class="container-xxl py-5">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-5">
+                <h2 class="font-headline-xl text-primary mb-4">Global Standards, Local Context</h2>
+                <p class="font-body-md text-secondary-emphasis">
+                    We blend the CBSE board curriculum with international enquiry methodologies, ensuring students achieve top-tier grades while building deep analytical logic.
+                </p>
+            </div>
+            <div class="col-lg-7">
+                <div class="row g-4">
+                    <div class="col-sm-6">
+                        <div class="p-4 bg-white border rounded shadow-sm text-center">
+                            <span class="material-symbols-outlined text-secondary fs-1 mb-2">emoji_events</span>
+                            <h2 class="fw-bold mb-0">100%</h2>
+                            <p class="text-muted mb-0 text-sm">Board Pass Rate</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="p-4 bg-white border rounded shadow-sm text-center">
+                            <span class="material-symbols-outlined text-secondary fs-1 mb-2">groups</span>
+                            <h2 class="fw-bold mb-0">1:15</h2>
+                            <p class="text-muted mb-0 text-sm">Teacher-Student Ratio</p>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="p-4 bg-primary text-white border rounded shadow text-center">
+                            <h4 class="mb-2">Accredited Academic Ecosystem</h4>
+                            <p class="mb-0 text-sm opacity-90">Fully certified by the Central Board of Secondary Education for outstanding academic standards.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Streams Breakdown -->
+<section id="streams" class="py-5 bg-white border-bottom">
+    <div class="container-xxl py-5">
+        <div class="text-center max-w-3xl mx-auto mb-5">
+            <h2 class="font-headline-xl text-primary">Department Streams</h2>
+            <p class="font-body-md text-secondary-emphasis">We offer specialized academic pathways for high school candidates.</p>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card-shadow-custom p-4 h-100 position-relative overflow-hidden">
+                        <span class="material-symbols-outlined text-secondary fs-1 mb-4">@item.Icon</span>
+                        <h3 class="font-headline-md text-primary mb-3">@item.Title</h3>
+                        <p class="font-body-md text-secondary-emphasis mb-4">@item.Description</p>
+                        
+                        <div class="border-top pt-3">
+                            <span class="font-label-md text-secondary d-block mb-2">Core Subject Modules:</span>
+                            <ul class="list-unstyled text-sm text-muted">
+                                @try
+                                {
+                                    var subjects = JsonSerializer.Deserialize<List<string>>(item.CurriculumJson) ?? new List<string>();
+                                    foreach (var sub in subjects)
+                                    {
+                                        <li class="d-flex align-items-center gap-2 mb-1">
+                                            <span class="material-symbols-outlined text-success fs-6">check_circle</span>
+                                            <span>@sub</span>
+                                        </li>
+                                    }
+                                }
+                                catch {}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Calendar -->
+<section id="calendar" class="py-5 bg-light">
+    <div class="container-xxl py-5">
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-end mb-4">
+            <div>
+                <h2 class="font-headline-lg text-primary mb-2">Academic Calendar</h2>
+                <p class="text-muted mb-0">Crucial dates, examination timings, and term breaks.</p>
+            </div>
+            <a href="#" class="btn btn-outline-dark d-flex align-items-center gap-1 mt-3 mt-sm-0">
+                <span class="material-symbols-outlined">download</span> Download PDF Calendar
+            </a>
+        </div>
+
+        <div class="bg-white rounded border overflow-hidden shadow-sm">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr class="bg-light">
+                            <th class="py-3 px-4">Event Description</th>
+                            <th class="py-3 px-4">Commences</th>
+                            <th class="py-3 px-4">Ends</th>
+                            <th class="py-3 px-4">State</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="py-3 px-4 fw-semibold">Commencement of Academic Session</td>
+                            <td class="py-3 px-4">April 5, 2024</td>
+                            <td class="py-3 px-4">-</td>
+                            <td class="py-3 px-4"><span class="badge bg-secondary-subtle text-secondary">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td class="py-3 px-4 fw-semibold">Summer Break</td>
+                            <td class="py-3 px-4">May 20, 2024</td>
+                            <td class="py-3 px-4">June 30, 2024</td>
+                            <td class="py-3 px-4"><span class="badge bg-secondary-subtle text-secondary">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td class="py-3 px-4 fw-semibold">Mid-Term Examinations</td>
+                            <td class="py-3 px-4">September 15, 2024</td>
+                            <td class="py-3 px-4">September 30, 2024</td>
+                            <td class="py-3 px-4"><span class="badge bg-secondary-subtle text-secondary text-primary bg-primary-subtle">Upcoming</span></td>
+                        </tr>
+                        <tr>
+                            <td class="py-3 px-4 fw-semibold">Winter Break</td>
+                            <td class="py-3 px-4">December 25, 2024</td>
+                            <td class="py-3 px-4">January 5, 2025</td>
+                            <td class="py-3 px-4"><span class="badge bg-secondary-subtle text-secondary">Scheduled</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

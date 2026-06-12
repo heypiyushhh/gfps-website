@@ -1,0 +1,44 @@
+@model IEnumerable<gfps.Models.Achievement>
+@{
+    ViewData["Title"] = "School Milestones & Achievements";
+}
+
+<!-- Hero Section -->
+<section class="py-5 px-margin-mobile md:px-margin-desktop overflow-hidden bg-white border-bottom">
+    <div class="container-xxl py-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <span class="inline-block py-2 px-4 rounded-pill bg-secondary-subtle text-secondary font-label-md mb-4 uppercase tracking-wider">Milestones</span>
+                <h1 class="font-headline-xl text-primary mb-4">Our Milestones of Success</h1>
+                <p class="font-body-lg text-secondary-emphasis">
+                    A timeline of academic breakthroughs, athletic state championships, and student awards that define the spirit of Green Field Public School.
+                </p>
+            </div>
+            <div class="col-lg-5">
+                <img src="/images/img_11.jpg" class="img-fluid rounded-4 shadow" alt="Achievements Showcase" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Timeline and Accolades -->
+<section class="py-5 bg-light">
+    <div class="container-xxl py-5">
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card-shadow-custom bg-white border p-4 h-100 d-flex flex-column gap-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-secondary-subtle text-secondary px-3 py-1.5 fs-6 fw-bold">@item.Year</span>
+                            <span class="material-symbols-outlined text-secondary fs-2">@item.Icon</span>
+                        </div>
+                        <span class="font-label-md text-muted uppercase">@item.Category</span>
+                        <h3 class="font-headline-md text-primary mb-0">@item.Title</h3>
+                        <p class="text-secondary-emphasis mb-0">@item.Description</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

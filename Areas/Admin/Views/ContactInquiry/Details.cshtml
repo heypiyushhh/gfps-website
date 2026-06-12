@@ -1,0 +1,66 @@
+@model gfps.Models.ContactInquiry
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Read Support Inquiry";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card-admin">
+            <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-4">
+                <div>
+                    <h5 class="mb-1">@Model.Subject</h5>
+                    <span class="text-muted">From: <strong>@Model.Name</strong> (email: <a href="mailto:@Model.Email">@Model.Email</a>)</span>
+                </div>
+                <span class="text-muted text-sm">@Model.SubmittedAt.ToString("MMMM dd, yyyy HH:mm")</span>
+            </div>
+
+            <div class="p-3 bg-light rounded mb-4" style="white-space: pre-wrap; font-size: 1rem; border: 1px solid #e2e8f0;">@Model.Message</div>
+
+            @if (!string.IsNullOrEmpty(Model.ReplyText))
+            {
+                <div class="border-top pt-4 mt-4">
+                    <h5 class="mb-3 text-success d-flex align-items-center gap-1">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        Response Filed
+                    </h5>
+                    <div class="p-3 bg-success-subtle text-success-emphasis rounded" style="white-space: pre-wrap;">@Model.ReplyText</div>
+                    <small class="text-muted d-block mt-2">Logged by Admissions Staff at @Model.RepliedAt?.ToString("MMMM dd, yyyy HH:mm")</small>
+                </div>
+            }
+            else
+            {
+                <div class="border-top pt-4 mt-4">
+                    <h5 class="mb-3">Draft Response</h5>
+                    <form action="/Admin/ContactInquiry/Reply/@Model.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label for="replyText" class="form-label text-muted">Reply Message (Logged internally for audit trails)</label>
+                            <textarea class="form-control" id="replyText" name="replyText" rows="5" required placeholder="Type the message reply sent to the sender..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary-admin py-2.5 px-4">Record Response &amp; Mark Resolved</button>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card-admin text-center py-4">
+            <span class="material-symbols-outlined text-primary fs-1 mb-2">mark_email_read</span>
+            <h5>Status Panel</h5>
+            <div class="my-3">
+                @if (!string.IsNullOrEmpty(Model.ReplyText))
+                {
+                    <span class="badge bg-success px-3 py-2 fs-6">Resolved</span>
+                }
+                else
+                {
+                    <span class="badge bg-warning px-3 py-2 fs-6">Awaiting Action</span>
+                }
+            </div>
+            <p class="text-muted text-sm">Messages are logged and kept for school enrollment audit timelines.</p>
+            <a href="/Admin/ContactInquiry" class="btn btn-outline-dark w-100 mt-3">Back to Inbox</a>
+        </div>
+    </div>
+</div>

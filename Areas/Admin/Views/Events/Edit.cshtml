@@ -1,0 +1,113 @@
+@model gfps.Models.Event
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Edit Scheduled Event";
+}
+
+<div class="card-admin max-w-lg mx-auto">
+    <div class="mb-4">
+        <h5 class="mb-0 fw-bold">Edit Event Details</h5>
+        <p class="text-muted text-sm">Modify dates, banner, registration links, or upload/delete event photos.</p>
+    </div>
+
+    <form action="/Admin/Events/Edit/@Model.Id" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <div class="mb-3">
+            <label for="Title" class="form-label">Event Title</label>
+            <input type="text" class="form-control" id="Title" name="Title" value="@Model.Title" required />
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="EventDate" class="form-label">Event Date</label>
+                <input type="date" class="form-control" id="EventDate" name="EventDate" value="@Model.EventDate.ToString("yyyy-MM-dd")" required />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="EventTime" class="form-label">Event Time</label>
+                <input type="text" class="form-control" id="EventTime" name="EventTime" value="@Model.EventTime" required />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="Location" class="form-label">Location</label>
+            <input type="text" class="form-control" id="Location" name="Location" value="@Model.Location" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="RegistrationLink" class="form-label">Registration URL</label>
+            <input type="url" class="form-control" id="RegistrationLink" name="RegistrationLink" value="@Model.RegistrationLink" />
+        </div>
+
+        <div class="mb-3">
+            <label for="ShortDescription" class="form-label">Short Description</label>
+            <textarea class="form-control" id="ShortDescription" name="ShortDescription" rows="3" required>@Model.ShortDescription</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="FullDescription" class="form-label">Full Description</label>
+            <textarea class="form-control" id="FullDescription" name="FullDescription" rows="8">@Model.FullDescription</textarea>
+        </div>
+
+        <!-- Event Banner Image -->
+        <div class="mb-4">
+            <label class="form-label d-block fw-bold">Event Banner Image</label>
+            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            {
+                <div class="mb-2">
+                    <img src="@Model.ImagePath" class="img-thumbnail rounded" style="max-height: 120px;" alt="Banner Image" />
+                </div>
+            }
+            <input class="form-control" type="file" id="imageFile" name="imageFile" accept="image/*" />
+        </div>
+
+        <!-- Event Photo Album -->
+        <div class="mb-4 border-top pt-3">
+            <label class="form-label d-block fw-bold mb-2">Event Photos</label>
+            @{
+                List<string> galleryPaths = new List<string>();
+                if (!string.IsNullOrEmpty(Model.GalleryImagesJson))
+                {
+                    try
+                     {
+                        galleryPaths = System.Text.Json.JsonSerializer.Deserialize<List<string>>(Model.GalleryImagesJson) ?? new List<string>();
+                     }
+                    catch { }
+                }
+            }
+
+            @if (galleryPaths.Count > 0)
+            {
+                <div class="row g-2 mb-3">
+                    @foreach (var imgPath in galleryPaths)
+                    {
+                        <div class="col-md-3 col-sm-4 position-relative">
+                            <img src="@imgPath" class="img-thumbnail rounded" style="width: 100%; height: 75px; object-fit: cover;" />
+                            <button type="submit" formaction="/Admin/Events/DeleteGalleryImage?id=@Model.Id&imagePath=@imgPath" class="btn btn-sm btn-danger rounded-circle p-1 position-absolute top-0 end-0 m-1 d-flex align-items-center justify-content-center" style="width: 22px; height: 22px;" onclick="return confirm('Remove this image from the event album?');">
+                                <span class="material-symbols-outlined fs-6" style="font-size: 14px;">close</span>
+                            </button>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-muted small italic mb-3">No additional images in this event album.</p>
+            }
+
+            <label for="galleryFiles" class="form-label text-sm fw-bold">Upload More Photos</label>
+            <input class="form-control" type="file" id="galleryFiles" name="galleryFiles" accept="image/*" multiple />
+        </div>
+
+        <div class="mb-4 form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="IsPublished" name="IsPublished" value="true" @(Model.IsPublished ? "checked" : "") />
+            <label class="form-check-label" for="IsPublished">Publish instantly (Visible on public events calendar)</label>
+        </div>
+
+        <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-primary btn-primary-admin px-4">Save Changes</button>
+            <a href="/Admin/Events" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

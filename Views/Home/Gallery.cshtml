@@ -1,0 +1,74 @@
+@model IEnumerable<gfps.Models.GalleryItem>
+@{
+    ViewData["Title"] = "Campus Gallery";
+    string selectedCat = ViewBag.SelectedCategory as string ?? "All";
+}
+
+<!-- Hero Section -->
+<section class="py-5 px-margin-mobile md:px-margin-desktop overflow-hidden bg-white border-bottom">
+    <div class="container-xxl py-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <span class="inline-block py-2 px-4 rounded-pill bg-secondary-subtle text-secondary font-label-md mb-4 uppercase tracking-wider">Life at Campus</span>
+                <h1 class="font-headline-xl text-primary mb-4">Capturing Excellence in Action</h1>
+                <p class="font-body-lg text-secondary-emphasis">
+                    Take a visual tour of our campus hubs, student activities, sports championships, and graduation moments.
+                </p>
+            </div>
+            <div class="col-lg-5">
+                <img src="/images/img_37.jpg" class="img-fluid rounded-4 shadow" alt="Gallery Hero" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filter & Gallery Grid -->
+<section class="py-5 bg-light">
+    <div class="container-xxl py-5">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-5 border-bottom pb-4 gap-4">
+            <div>
+                <h2 class="font-headline-lg text-primary mb-2">Campus Media Gallery</h2>
+                <p class="text-muted mb-0">Browse through captured moments of learning and joy.</p>
+            </div>
+            <!-- Category Filters -->
+            <div class="d-flex gap-2 overflow-x-auto pb-2">
+                <a href="/Home/Gallery?category=All" class="btn btn-sm rounded-pill px-4 py-2 @(selectedCat == "All" ? "btn-primary" : "btn-outline-secondary bg-white")">All</a>
+                <a href="/Home/Gallery?category=Academics" class="btn btn-sm rounded-pill px-4 py-2 @(selectedCat == "Academics" ? "btn-primary" : "btn-outline-secondary bg-white")">Academics</a>
+                <a href="/Home/Gallery?category=Sports" class="btn btn-sm rounded-pill px-4 py-2 @(selectedCat == "Sports" ? "btn-primary" : "btn-outline-secondary bg-white")">Sports</a>
+                <a href="/Home/Gallery?category=Cultural" class="btn btn-sm rounded-pill px-4 py-2 @(selectedCat == "Cultural" ? "btn-primary" : "btn-outline-secondary bg-white")">Cultural</a>
+                <a href="/Home/Gallery?category=Campus" class="btn btn-sm rounded-pill px-4 py-2 @(selectedCat == "Campus" ? "btn-primary" : "btn-outline-secondary bg-white")">Campus</a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            @if (!Model.Any())
+            {
+                <div class="col-12 text-center text-muted py-5">
+                    <h5>No media assets found in this category.</h5>
+                </div>
+            }
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card-shadow-custom bg-white border overflow-hidden h-100">
+                        <div class="position-relative" style="height: 240px; background-color: #f1f5f9;">
+                            <img src="@item.FilePath" class="w-100 h-100 object-cover" alt="@item.Title" />
+                            @if (item.IsVideo)
+                            {
+                                <div class="position-absolute top-50 start-50 translate-middle">
+                                    <a href="@item.VideoUrl" target="_blank" class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 56px; height: 56px; box-shadow: 0 10px 15px rgba(0,0,0,0.3);">
+                                        <span class="material-symbols-outlined fs-2">play_arrow</span>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                        <div class="p-4">
+                            <span class="badge bg-secondary-subtle text-secondary mb-2">@item.Category</span>
+                            <h4 class="text-primary mb-0">@item.Title</h4>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

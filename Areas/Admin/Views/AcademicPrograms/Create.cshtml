@@ -1,0 +1,80 @@
+@model gfps.Models.AcademicProgram
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Add Academic Stream";
+}
+
+<div class="card-admin max-w-lg mx-auto">
+    <div class="mb-4">
+        <h5 class="mb-0 fw-bold">New Academic Stream</h5>
+        <p class="text-muted text-sm">Add a new educational stream and subject curriculum.</p>
+    </div>
+
+    <form action="/Admin/AcademicPrograms/Create" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label for="Title" class="form-label">Stream Title</label>
+            <input type="text" class="form-control" id="Title" name="Title" required placeholder="e.g. Science Stream (PCM)" />
+        </div>
+
+        <div class="mb-3">
+            <label for="Department" class="form-label">Department</label>
+            <select class="form-select" id="Department" name="Department" required>
+                <option value="Science">Science</option>
+                <option value="Commerce">Commerce</option>
+                <option value="Humanities">Humanities</option>
+                <option value="Vocational">Vocational</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="ClassOrGrade" class="form-label">Class / Grade Range</label>
+            <input type="text" class="form-control" id="ClassOrGrade" name="ClassOrGrade" required placeholder="e.g. Grade XI & XII" />
+        </div>
+
+        <div class="mb-3">
+            <label for="Subject" class="form-label">Core Subjects List</label>
+            <input type="text" class="form-control" id="Subject" name="Subject" required placeholder="e.g. Physics, Chemistry, Mathematics, English" />
+            <small class="text-muted">Comma-separated list of subjects.</small>
+        </div>
+
+        <div class="mb-3">
+            <label for="Description" class="form-label">Short Description</label>
+            <textarea class="form-control" id="Description" name="Description" rows="3" required placeholder="Brief summary for list view cards..."></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="FullDescription" class="form-label">Full Description</label>
+            <textarea class="form-control" id="FullDescription" name="FullDescription" rows="8" placeholder="Detailed stream description..."></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="curriculumText" class="form-label">Curriculum Topics / Syllabus</label>
+            <textarea class="form-control" id="curriculumText" name="curriculumText" rows="6" placeholder="Topic 1: Mechanics&#10;Topic 2: Calculus&#10;Topic 3: Organic Chemistry"></textarea>
+            <small class="text-muted">Enter one curriculum topic per line. These will be parsed into bullet points.</small>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="DisplayOrder" class="form-label">Display Order</label>
+                <input type="number" class="form-control" id="DisplayOrder" name="DisplayOrder" value="0" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="Icon" class="form-label">Material Icon Name</label>
+                <input type="text" class="form-control" id="Icon" name="Icon" value="school" placeholder="e.g. biotech, query_stats" />
+                <small class="text-muted">Google icon identifier.</small>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label for="featuredImageFile" class="form-label">Featured Banner Image</label>
+            <input class="form-control" type="file" id="featuredImageFile" name="featuredImageFile" accept="image/*" />
+        </div>
+
+        <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-primary btn-primary-admin px-4">Create Stream</button>
+            <a href="/Admin/AcademicPrograms" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,927 @@
+@{
+    ViewData["Title"] = "Portal Login";
+    Layout = null; // Standalone page — no shared nav/footer needed
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portal Login — Green Field Public School</title>
+    <meta name="description" content="Sign in to the Green Field Public School administrative portal." />
+    <meta name="robots" content="noindex, nofollow" />
+
+    <!-- Fonts: exact same subset as main site -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+    <!-- Site CSS (compiled SCSS — includes Bootstrap 5 + design tokens) -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        /* ============================================================
+           LOGIN PAGE — Self-contained styles
+           Design tokens sourced from _variables.scss:
+             $primary:       #0f172a  (Slate-900)
+             $secondary:     #0051d5  (Stitch brand blue)
+             $body-bg:       #f8fafc  (Slate-50 / site background)
+             $body-color:    #1b1b1d  (on-surface)
+             $surface:       #ffffff
+             on-surface-variant: #45464d
+             surface-container-low: #f6f3f5
+             outline:        #76777d
+             $box-shadow-lg: 0px 20px 40px rgba(15,23,42,0.08)
+           ============================================================ */
+
+        /* --- Reset & Base --- */
+        *, *::before, *::after { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;          /* body-bg = site background */
+            color: #1b1b1d;                      /* on-surface */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Page shell --- */
+        .login-page {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr;
+            min-height: 100vh;
+        }
+
+        @@media (min-width: 1024px) {
+            .login-page {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* ============================================================
+           LEFT PANEL — Decorative brand panel (desktop only)
+           ============================================================ */
+        .login-brand-panel {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 3rem;
+            background: linear-gradient(145deg, #0f172a 0%, #1e3a6e 50%, #0051d5 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        @@media (min-width: 1024px) {
+            .login-brand-panel {
+                display: flex;
+            }
+        }
+
+        /* Decorative background circles */
+        .login-brand-panel::before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            right: -80px;
+            width: 320px;
+            height: 320px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .login-brand-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -120px;
+            left: -60px;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .brand-panel-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.3;
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-panel-logo .material-symbols-outlined {
+            font-size: 32px;
+            color: #dbe1ff;             /* secondary-fixed */
+            font-variation-settings: 'FILL' 1;
+        }
+
+        .brand-panel-body {
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-panel-headline {
+            font-family: 'Poppins', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #ffffff;
+            margin: 0 0 1rem;
+        }
+
+        .brand-panel-headline span {
+            color: #dbe1ff;             /* secondary-fixed */
+        }
+
+        .brand-panel-desc {
+            font-size: 16px;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.72);
+            margin: 0 0 2rem;
+        }
+
+        .brand-panel-stats {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .brand-stat {
+            text-align: left;
+        }
+
+        .brand-stat-number {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .brand-stat-label {
+            font-size: 13px;
+            color: rgba(255,255,255,0.60);
+            letter-spacing: 0.04em;
+        }
+
+        .brand-panel-footer {
+            position: relative;
+            z-index: 1;
+            font-size: 13px;
+            color: rgba(255,255,255,0.45);
+        }
+
+        /* ============================================================
+           RIGHT PANEL — Login form
+           ============================================================ */
+        .login-form-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            background-color: #f8fafc;
+        }
+
+        @@media (min-width: 576px) {
+            .login-form-panel {
+                padding: 3rem 2rem;
+            }
+        }
+
+        /* Top back-link bar (visible on all sizes) */
+        .login-topbar {
+            width: 100%;
+            max-width: 440px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .login-back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #45464d;             /* on-surface-variant */
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .login-back-link:hover {
+            color: #0051d5;
+        }
+
+        .login-back-link .material-symbols-outlined {
+            font-size: 18px;
+        }
+
+        /* Mobile-only logo (shown when left panel is hidden) */
+        .mobile-brand-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1b1b1d;
+            text-decoration: none;
+        }
+
+        .mobile-brand-logo .material-symbols-outlined {
+            font-size: 24px;
+            color: #0051d5;
+            font-variation-settings: 'FILL' 1;
+        }
+
+        @@media (min-width: 1024px) {
+            .mobile-brand-logo { display: none; }
+        }
+
+        /* ============================================================
+           LOGIN CARD
+           ============================================================ */
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            background: #ffffff;
+            border-radius: 1rem;                /* border-radius-lg */
+            border: 1px solid #e9eaf0;
+            box-shadow: 0px 20px 40px rgba(15, 23, 42, 0.08); /* box-shadow-lg */
+            padding: 2.5rem;
+        }
+
+        @@media (min-width: 576px) {
+            .login-card {
+                padding: 3rem;
+            }
+        }
+
+        @@media (max-width: 375px) {
+            .login-card {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        /* Card header */
+        .login-card-header {
+            margin-bottom: 2rem;
+        }
+
+        .login-card-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #0051d5;
+            margin-bottom: 0.75rem;
+        }
+
+        .login-card-eyebrow .material-symbols-outlined {
+            font-size: 16px;
+            color: #0051d5;
+            font-variation-settings: 'FILL' 1;
+        }
+
+        .login-card-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #0f172a;             /* $primary */
+            margin: 0 0 0.5rem;
+        }
+
+        .login-card-subtitle {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #45464d;             /* on-surface-variant */
+            margin: 0;
+        }
+
+        /* ============================================================
+           ERROR ALERT
+           ============================================================ */
+        .login-error-alert {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: #fff5f5;
+            border: 1px solid #fecaca;
+            border-left: 4px solid #ba1a1a;
+            border-radius: 0.5rem;
+            padding: 0.875rem 1rem;
+            margin-bottom: 1.5rem;
+            animation: slide-in 0.2s ease-out;
+        }
+
+        @@keyframes slide-in {
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-error-alert .material-symbols-outlined {
+            font-size: 18px;
+            color: #ba1a1a;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .login-error-alert-text {
+            font-size: 14px;
+            color: #7f1d1d;
+            line-height: 1.5;
+        }
+
+        /* ============================================================
+           FORM FIELDS
+           ============================================================ */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            color: #1b1b1d;             /* on-surface */
+            margin-bottom: 0.5rem;
+        }
+
+        /* Input base — matches Stitch Contact form:
+           bg-surface-container-low (#f6f3f5) border-transparent rounded-lg py-3 px-4 */
+        .form-input {
+            width: 100%;
+            background-color: #f6f3f5;  /* surface-container-low */
+            border: 1.5px solid transparent;
+            border-radius: 0.5rem;      /* rounded-lg */
+            padding: 0.75rem 1rem;      /* py-3 px-4 */
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            color: #1b1b1d;
+            line-height: 1.5;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-input::placeholder {
+            color: #76777d;             /* outline */
+        }
+
+        .form-input:focus {
+            background-color: #ffffff;
+            border-color: #0051d5;      /* $secondary */
+            box-shadow: 0 0 0 3px rgba(0, 81, 213, 0.12);
+        }
+
+        .form-input:hover:not(:focus) {
+            border-color: #c6c6cd;      /* outline-variant */
+            background-color: #f0edef;
+        }
+
+        /* Input with button inside (password toggle) */
+        .input-group-password {
+            position: relative;
+        }
+
+        .input-group-password .form-input {
+            padding-right: 3rem;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            padding: 4px;
+            cursor: pointer;
+            color: #76777d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .password-toggle:hover {
+            color: #0051d5;
+            background-color: rgba(0, 81, 213, 0.06);
+        }
+
+        .password-toggle:focus-visible {
+            outline: 2px solid #0051d5;
+            outline-offset: 2px;
+        }
+
+        .password-toggle .material-symbols-outlined {
+            font-size: 20px;
+        }
+
+        /* Field hint / forgot password row */
+        .field-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .forgot-link {
+            font-size: 13px;
+            font-weight: 500;
+            color: #0051d5;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .forgot-link:hover {
+            color: #003ea8;
+            text-decoration: underline;
+        }
+
+        /* ============================================================
+           REMEMBER ME ROW
+           ============================================================ */
+        .remember-row {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .remember-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: #0051d5;      /* browser-native checkbox color */
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .remember-label {
+            font-size: 14px;
+            color: #45464d;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* ============================================================
+           SUBMIT BUTTON — matches site's .btn-apply-now
+           ============================================================ */
+        .login-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: #0051d5;  /* $secondary */
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            padding: 0.875rem 1.5rem;   /* generous height */
+            border-radius: 0.5rem;      /* rounded-lg — consistent with inputs */
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0, 81, 213, 0.25);
+            transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1.25rem;
+        }
+
+        .login-btn:hover:not(:disabled) {
+            background-color: #003ea8;  /* on-secondary-fixed-variant */
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 81, 213, 0.32);
+        }
+
+        .login-btn:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 81, 213, 0.2);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .login-btn:focus-visible {
+            outline: 3px solid rgba(0, 81, 213, 0.4);
+            outline-offset: 2px;
+        }
+
+        /* Loading spinner inside button */
+        .login-btn-spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2.5px solid rgba(255,255,255,0.35);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        .login-btn.loading .login-btn-spinner {
+            display: block;
+        }
+
+        .login-btn.loading .login-btn-label {
+            opacity: 0.7;
+        }
+
+        @@keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ============================================================
+           DIVIDER
+           ============================================================ */
+        .login-divider {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0 0 1.25rem;
+        }
+
+        .login-divider-line {
+            flex: 1;
+            height: 1px;
+            background-color: #e9eaf0;
+        }
+
+        .login-divider-text {
+            font-size: 12px;
+            color: #76777d;
+            white-space: nowrap;
+        }
+
+        /* ============================================================
+           BOTTOM ACTIONS
+           ============================================================ */
+        .login-footer-actions {
+            text-align: center;
+        }
+
+        .login-footer-text {
+            font-size: 14px;
+            color: #45464d;
+        }
+
+        .login-footer-link {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0051d5;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .login-footer-link:hover {
+            color: #003ea8;
+            text-decoration: underline;
+        }
+
+        /* ============================================================
+           RESPONSIVE OVERRIDES
+           ============================================================ */
+
+        /* 320px — very small mobile */
+        @@media (max-width: 360px) {
+            .login-card-title { font-size: 22px; }
+            .brand-panel-stats { gap: 1rem; }
+        }
+
+        /* 768px — tablet: still single column but wider card */
+        @@media (min-width: 768px) and (max-width: 1023px) {
+            .login-form-panel { padding: 4rem 3rem; }
+        }
+
+        /* 1440px — large desktop: slightly increase brand panel text */
+        @@media (min-width: 1440px) {
+            .brand-panel-headline { font-size: 42px; }
+            .login-card { max-width: 480px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-page">
+
+    <!-- =====================================================
+         LEFT: Brand Panel (Desktop only)
+         ===================================================== -->
+    <aside class="login-brand-panel" aria-hidden="true">
+        <!-- Top logo -->
+        <a class="brand-panel-logo" href="/" tabindex="-1">
+            <span class="material-symbols-outlined">school</span>
+            Green Field Public School
+        </a>
+
+        <!-- Middle content -->
+        <div class="brand-panel-body">
+            <h2 class="brand-panel-headline">
+                Empowering the<br />
+                <span>Leaders of Tomorrow</span>
+            </h2>
+            <p class="brand-panel-desc">
+                The Green Field administrative portal gives you secure, role-based access to manage faculty, admissions, events, content, and campus resources — all in one place.
+            </p>
+            <!-- Mini stats strip -->
+            <div class="brand-panel-stats">
+                <div class="brand-stat">
+                    <div class="brand-stat-number">5000+</div>
+                    <div class="brand-stat-label">Students Enrolled</div>
+                </div>
+                <div class="brand-stat">
+                    <div class="brand-stat-number">250+</div>
+                    <div class="brand-stat-label">Expert Faculty</div>
+                </div>
+                <div class="brand-stat">
+                    <div class="brand-stat-number">30+</div>
+                    <div class="brand-stat-label">Years of Excellence</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom attribution -->
+        <p class="brand-panel-footer">© 2024 Green Field Public School · Secure Portal</p>
+    </aside>
+
+    <!-- =====================================================
+         RIGHT: Login Form Panel
+         ===================================================== -->
+    <main class="login-form-panel" role="main" id="main-content">
+
+        <!-- Top bar: back link + mobile logo -->
+        <div class="login-topbar">
+            <a class="login-back-link" href="/" aria-label="Back to public website">
+                <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+                Back to website
+            </a>
+            <a class="mobile-brand-logo" href="/" aria-label="Green Field Public School Home">
+                <span class="material-symbols-outlined" aria-hidden="true">school</span>
+                GFPS
+            </a>
+        </div>
+
+        <!-- Login Card -->
+        <div class="login-card" role="region" aria-label="Login form">
+
+            <!-- Card Header -->
+            <header class="login-card-header">
+                <div class="login-card-eyebrow">
+                    <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+                    Secure Portal Access
+                </div>
+                <h1 class="login-card-title">Welcome back</h1>
+                <p class="login-card-subtitle">Sign in to your administrative account to manage campus content and operations.</p>
+            </header>
+
+            <!-- Error Messages (only rendered when ModelState has errors) -->
+            @if (!ViewData.ModelState.IsValid && ViewData.ModelState.Values.Any(v => v.Errors.Count > 0))
+            {
+                <div class="login-error-alert" role="alert" aria-live="assertive" id="login-errors">
+                    <span class="material-symbols-outlined" aria-hidden="true">error</span>
+                    <div class="login-error-alert-text">
+                        @foreach (var modelState in ViewData.ModelState.Values)
+                        {
+                            foreach (var error in modelState.Errors)
+                            {
+                                <div>@error.ErrorMessage</div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Success message (e.g., password reset confirmation) -->
+            @if (TempData["Success"] != null)
+            {
+                <div class="login-error-alert" role="status" style="border-left-color: #16a34a; background: #f0fdf4; border-color: #bbf7d0;">
+                    <span class="material-symbols-outlined" aria-hidden="true" style="color: #16a34a;">check_circle</span>
+                    <div class="login-error-alert-text" style="color: #14532d;">@TempData["Success"]</div>
+                </div>
+            }
+
+            <!-- ============================================================
+                 LOGIN FORM
+                 ============================================================ -->
+            <form action="/Account/Login" method="post" id="login-form" novalidate>
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input
+                        class="form-input"
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                        placeholder="admin@gfps.edu"
+                        autocomplete="email"
+                        aria-required="true"
+                        aria-describedby="login-errors"
+                        spellcheck="false"
+                        autofocus />
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <div class="field-row">
+                        <label class="form-label" for="password" style="margin-bottom: 0;">Password</label>
+                        <a class="forgot-link" href="#" aria-label="Forgot your password?">Forgot password?</a>
+                    </div>
+                    <div class="input-group-password">
+                        <input
+                            class="form-input"
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            aria-required="true"
+                            aria-describedby="login-errors" />
+                        <!-- Show / Hide password toggle -->
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="passwordToggle"
+                            aria-label="Show password"
+                            aria-pressed="false"
+                            title="Toggle password visibility">
+                            <span class="material-symbols-outlined" id="passwordToggleIcon" aria-hidden="true">visibility</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remember Me -->
+                <div class="remember-row">
+                    <input
+                        class="remember-checkbox"
+                        type="checkbox"
+                        id="rememberMe"
+                        name="rememberMe"
+                        value="true" />
+                    <label class="remember-label" for="rememberMe">
+                        Keep me signed in for 2 hours
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <button
+                    type="submit"
+                    class="login-btn"
+                    id="loginBtn"
+                    aria-label="Sign in to your account">
+                    <div class="login-btn-spinner" aria-hidden="true"></div>
+                    <span class="login-btn-label">Sign In</span>
+                    <span class="material-symbols-outlined" style="font-size: 18px;" aria-hidden="true">arrow_forward</span>
+                </button>
+
+            </form>
+
+            <!-- Divider -->
+            <div class="login-divider" aria-hidden="true">
+                <div class="login-divider-line"></div>
+                <span class="login-divider-text">or</span>
+                <div class="login-divider-line"></div>
+            </div>
+
+            <!-- Footer: back to site -->
+            <div class="login-footer-actions">
+                <p class="login-footer-text">
+                    Not an administrator?
+                    <a class="login-footer-link" href="/">Return to school website</a>
+                </p>
+            </div>
+
+        </div>
+        <!-- /login-card -->
+
+    </main>
+    <!-- /login-form-panel -->
+
+</div>
+<!-- /login-page -->
+
+<!-- Bootstrap Bundle JS (needed for potential Bootstrap components) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // ============================================================
+    // PASSWORD SHOW / HIDE TOGGLE
+    // ============================================================
+    (function () {
+        const toggle = document.getElementById('passwordToggle');
+        const input  = document.getElementById('password');
+        const icon   = document.getElementById('passwordToggleIcon');
+
+        if (!toggle || !input || !icon) return;
+
+        toggle.addEventListener('click', function () {
+            const isHidden = input.type === 'password';
+            input.type = isHidden ? 'text' : 'password';
+            icon.textContent = isHidden ? 'visibility_off' : 'visibility';
+            toggle.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+            toggle.setAttribute('aria-pressed', isHidden ? 'true' : 'false');
+            // Return focus to input
+            input.focus();
+        });
+    })();
+
+    // ============================================================
+    // SUBMIT LOADING STATE
+    // Prevents double-submit and provides visual feedback
+    // ============================================================
+    (function () {
+        const form = document.getElementById('login-form');
+        const btn  = document.getElementById('loginBtn');
+
+        if (!form || !btn) return;
+
+        form.addEventListener('submit', function (e) {
+            // Basic client-side check: don't show loading if fields empty
+            const email    = document.getElementById('email');
+            const password = document.getElementById('password');
+            if (!email || !password) return;
+            if (!email.value.trim() || !password.value.trim()) return;
+
+            // Activate loading state
+            btn.classList.add('loading');
+            btn.setAttribute('disabled', 'true');
+            btn.setAttribute('aria-busy', 'true');
+        });
+
+        // If the page reloads (validation error), restore the button
+        window.addEventListener('pageshow', function () {
+            btn.classList.remove('loading');
+            btn.removeAttribute('disabled');
+            btn.removeAttribute('aria-busy');
+        });
+    })();
+
+    // ============================================================
+    // CLIENT-SIDE FORM VALIDATION (HTML5 constraint API)
+    // ============================================================
+    (function () {
+        const email    = document.getElementById('email');
+        const password = document.getElementById('password');
+
+        function addValidationStyle(input) {
+            if (!input) return;
+            input.addEventListener('blur', function () {
+                if (input.validity.valid) {
+                    input.style.borderColor = '#16a34a';
+                    input.style.boxShadow = '0 0 0 3px rgba(22, 163, 74, 0.1)';
+                } else if (input.value !== '') {
+                    input.style.borderColor = '#ba1a1a';
+                    input.style.boxShadow = '0 0 0 3px rgba(186, 26, 26, 0.1)';
+                }
+            });
+            input.addEventListener('input', function () {
+                // Reset to default on edit
+                input.style.borderColor = '';
+                input.style.boxShadow = '';
+            });
+            input.addEventListener('focus', function () {
+                input.style.borderColor = '';
+                input.style.boxShadow = '';
+            });
+        }
+
+        addValidationStyle(email);
+        addValidationStyle(password);
+    })();
+</script>
+
+</body>
+</html>

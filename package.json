@@ -1,0 +1,16 @@
+{
+  "name": "gfps",
+  "version": "1.0.0",
+  "description": "Green Field Public School CMS and Site",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "sass CSS/site.scss wwwroot/css/site.css --style=compressed --no-source-map && sass CSS/admin.scss wwwroot/css/admin.css --style=compressed --no-source-map",
+    "watch:css": "sass --watch CSS:wwwroot/css --no-source-map"
+  },
+  "devDependencies": {
+    "sass": "^1.77.0"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.8"
+  }
+}

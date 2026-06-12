@@ -1,0 +1,136 @@
+@model IEnumerable<gfps.Models.Achievement>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Achievements Management";
+    string searchTerm = ViewBag.SearchTerm as string ?? "";
+    int currentPage = ViewBag.CurrentPage is int ? (int)ViewBag.CurrentPage : 1;
+    int totalPages = ViewBag.TotalPages is int ? (int)ViewBag.TotalPages : 1;
+    int totalItems = ViewBag.TotalItems is int ? (int)ViewBag.TotalItems : 0;
+}
+
+<div class="card-admin">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h5 class="mb-0 fw-bold">Achievements & Accolades</h5>
+            <p class="text-muted text-sm mb-0">Record student honors, athletic trophies, and institutional accolades.</p>
+        </div>
+        <a href="/Admin/Achievements/Create" class="btn btn-primary btn-primary-admin d-flex align-items-center gap-1 align-self-start">
+            <span class="material-symbols-outlined">add</span>
+            Add Achievement
+        </a>
+    </div>
+
+    <!-- Search Form -->
+    <form method="get" action="/Admin/Achievements" class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" name="searchTerm" class="form-control" placeholder="Search by title, recipient, type or year..." value="@searchTerm" />
+                <button class="btn btn-primary btn-primary-admin" type="submit">Search</button>
+                @if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    <a href="/Admin/Achievements" class="btn btn-outline-secondary d-flex align-items-center">
+                        <span class="material-symbols-outlined fs-6">close</span>
+                    </a>
+                }
+            </div>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th style="width: 80px;">Image</th>
+                    <th>Achievement Title</th>
+                    <th>Recipient</th>
+                    <th>Year / Date</th>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th style="width: 120px;">Status</th>
+                    <th style="width: 160px; text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-4">No achievements recorded yet.</td>
+                    </tr>
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.ImagePath))
+                            {
+                                <img src="@item.ImagePath" class="rounded border" style="width: 50px; height: 35px; object-fit: cover;" alt="@item.Title" />
+                            }
+                            else
+                            {
+                                <div class="bg-secondary-subtle rounded border d-flex align-items-center justify-content-center text-secondary small" style="width: 50px; height: 35px;">
+                                    <span class="material-symbols-outlined fs-6">emoji_events</span>
+                                </div>
+                            }
+                        </td>
+                        <td><strong>@item.Title</strong></td>
+                        <td>@item.RecipientName</td>
+                        <td>
+                            <strong>@item.Year</strong><br/>
+                            <small class="text-muted">@item.AchievementDate.ToString("yyyy-MM-dd")</small>
+                        </td>
+                        <td><span class="badge bg-secondary-subtle text-secondary">@item.AchievementType</span></td>
+                        <td>@item.Category</td>
+                        <td>
+                            <form action="/Admin/Achievements/ToggleStatus/@item.Id" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="border-0 bg-transparent p-0">
+                                    <span class="badge @(item.IsActive ? "bg-success" : "bg-danger")" style="cursor: pointer;">
+                                        @(item.IsActive ? "Active" : "Inactive")
+                                    </span>
+                                </button>
+                            </form>
+                        </td>
+                        <td align="right">
+                            <div class="d-flex gap-2 justify-content-end">
+                                <a href="/Admin/Achievements/Details/@item.Id" class="btn btn-sm btn-outline-info" title="View details">
+                                    <span class="material-symbols-outlined fs-6">visibility</span>
+                                </a>
+                                <a href="/Admin/Achievements/Edit/@item.Id" class="btn btn-sm btn-outline-dark" title="Edit">
+                                    <span class="material-symbols-outlined fs-6">edit</span>
+                                </a>
+                                <form action="/Admin/Achievements/Delete/@item.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this achievement?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                        <span class="material-symbols-outlined fs-6">delete</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    @if (totalPages > 1)
+    {
+        <nav class="d-flex justify-content-between align-items-center mt-4">
+            <p class="text-muted text-sm mb-0">Showing Page @currentPage of @totalPages (@totalItems items)</p>
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" href="/Admin/Achievements?searchTerm=@searchTerm&page=@(currentPage - 1)">Previous</a>
+                </li>
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(currentPage == i ? "active" : "")">
+                        <a class="page-link" href="/Admin/Achievements?searchTerm=@searchTerm&page=@i">@i</a>
+                    </li>
+                }
+                <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                    <a class="page-link" href="/Admin/Achievements?searchTerm=@searchTerm&page=@(currentPage + 1)">Next</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>
